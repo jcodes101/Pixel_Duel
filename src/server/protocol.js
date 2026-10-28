@@ -1,5 +1,6 @@
 const EVENTS = Object.freeze({
   JOIN: "join",
+  CONFIGURE: "configure",
   MOVE: "move",
   REMATCH: "rematch",
   STATE: "state",
@@ -48,11 +49,14 @@ function serializeRoomState(room, playerIndex) {
     players: room.players.map(player => ({
       hp: player.hp,
       locked: player.locked,
-      cooldown: player.cooldown
+      cooldown: player.cooldown,
+      characterId: player.characterId,
+      cosmetics: { ...player.cosmetics }
     })),
     result: serializeResult(room.result),
     log: room.log.slice(),
-    rematchVotes: room.rematches.size
+    rematchVotes: room.rematches.size,
+    youRematchReady: room.rematches.has(room.players[playerIndex]?.id)
   };
 }
 

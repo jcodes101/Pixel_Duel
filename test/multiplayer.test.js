@@ -113,6 +113,87 @@ test("room joins assign indexes, generate codes, and reject invalid or full room
   assert.equal((await join(third, "1234")).error !== undefined, true);
 });
 
+test("characters synchronize, lock at match start, and persist through a rematch", async t => {
+  const { connect, game } = await createFixture(t);
+  const first = await connect();
+  const second = await connect();
+  const knight = {
+    code: "CAST",
+    characterId: "knight",
+    cosmetics: { accentColor: "azure", headgear: "winged-helm", accessory: "cape" }
+  };
+  const mage = {
+    code: "CAST",
+    characterId: "mage",
+    cosmetics: { accentColor: "violet", headgear: "hood", accessory: "floating-orb" }
+  };
+
+  const firstWaiting = waitForEvent(first, "state", state => state.phase === "WAITING");
+  assert.deepEqual(await join(first, knight), { code: "CAST" });
+  const firstInitial = await firstWaiting;
+  assert.equal(firstInitial.players[0].characterId, "knight");
+  assert.deepEqual(firstInitial.players[0].cosmetics, knight.cosmetics);
+
+  const invalidClaim = await emitWithAck(first, "configure", {
+    characterId: "assassin",
+    cosmetics: { accentColor: "ember", headgear: "deep-hood", accessory: "none" },
+    playerIndex: 1
+  });
+  assert.match(invalidClaim.error, /unsupported fields/i);
+
+  const ownConfiguration = waitForEvent(first, "state",
+    state => state.phase === "WAITING" && state.players[0].characterId === "assassin");
+  const changed = await emitWithAck(first, "configure", {
+    characterId: "assassin",
+    cosmetics: { accentColor: "jade", headgear: "deep-hood", accessory: "neck-wrap" }
+  });
+  assert.deepEqual(changed, { ok: true });
+  const changedState = await ownConfiguration;
+  assert.equal(changedState.players.length, 1);
+  assert.equal(changedState.players[0].characterId, "assassin");
+
+  const firstSelect = waitForEvent(first, "state", state => state.phase === "SELECT");
+  const secondSelect = waitForEvent(second, "state", state => state.phase === "SELECT");
+  assert.deepEqual(await join(second, mage), { code: "CAST" });
+  const [firstState, secondState] = await Promise.all([firstSelect, secondSelect]);
+  assert.equal(firstState.you, 0);
+  assert.equal(secondState.you, 1);
+  assert.equal(firstState.players[0].characterId, "assassin");
+  assert.equal(firstState.players[1].characterId, "mage");
+  assert.equal(secondState.players[0].characterId, "assassin");
+  assert.equal(secondState.players[1].characterId, "mage");
+  assert.deepEqual(firstState.players[1].cosmetics, mage.cosmetics);
+  assert.deepEqual(secondState.players[0].cosmetics, changedState.players[0].cosmetics);
+
+  const lockedConfiguration = await emitWithAck(first, "configure", {
+    characterId: "brute",
+    cosmetics: { accentColor: "gold", headgear: "iron-cap", accessory: "fur-mantle" }
+  });
+  assert.match(lockedConfiguration.error, /locked/i);
+  assert.equal(game.roomManager.rooms.get("CAST").players[0].characterId, "assassin");
+
+  const room = game.roomManager.rooms.get("CAST");
+  room.players.forEach(player => { player.hp = 1; });
+  const firstOver = waitForEvent(first, "state", state => state.phase === "GAME_OVER");
+  const secondOver = waitForEvent(second, "state", state => state.phase === "GAME_OVER");
+  await emitWithAck(first, "move", "Attack");
+  await emitWithAck(second, "move", "Attack");
+  await Promise.all([firstOver, secondOver]);
+
+  const firstReset = waitForEvent(first, "state", state => state.phase === "SELECT");
+  const secondReset = waitForEvent(second, "state", state => state.phase === "SELECT");
+  await emitWithAck(first, "rematch");
+  await emitWithAck(second, "rematch");
+  const [afterRematchFirst, afterRematchSecond] =
+    await Promise.all([firstReset, secondReset]);
+  for (const state of [afterRematchFirst, afterRematchSecond]) {
+    assert.equal(state.players[0].characterId, "assassin");
+    assert.equal(state.players[1].characterId, "mage");
+    assert.deepEqual(state.players[0].cosmetics, changedState.players[0].cosmetics);
+    assert.deepEqual(state.players[1].cosmetics, mage.cosmetics);
+  }
+});
+
 test("room codes avoid active collisions and join attempts are throttled per socket", async t => {
   const values = [0, 0, 0, 0, 1, 1, 1, 1];
   let valueIndex = 0;
@@ -236,6 +317,8 @@ test("game-over result survives one rematch vote and both votes reset the duel",
   assert.equal(votedSecond.round, 1);
   assert.equal(votedFirst.result.winner, -1);
   assert.equal(votedSecond.result.winner, -1);
+  assert.equal(votedFirst.youRematchReady, true);
+  assert.equal(votedSecond.youRematchReady, false);
 
   const resetFirst = waitForEvent(first, "state", state => state.phase === "SELECT");
   const resetSecond = waitForEvent(second, "state", state => state.phase === "SELECT");

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11111b">
+  <title>Pixel Duel 2.0</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <div class="night-sky" aria-hidden="true"></div>
+  <main class="app-shell">
+    <p id="startup-error" class="notice notice--error" role="alert" hidden></p>
+
+    <section id="menu-screen" class="screen menu-screen" aria-labelledby="game-title">
+      <header class="masthead">
+        <p class="eyebrow">A TWO-PLAYER FANTASY DUEL</p>
+        <h1 id="game-title">PIXEL <span>DUEL</span><b>2.0</b></h1>
+        <div class="title-rule" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p class="masthead__subtitle">Choose your champion. Face your rival.</p>
+      </header>
+
+      <section class="selection-panel" aria-label="Choose your champion">
+        <div class="roster-column">
+          <div class="section-heading">
+            <span class="section-heading__index">01</span>
+            <div>
+              <h2>Choose a fighter</h2>
+              <p>Seven paths. One fair fight.</p>
+            </div>
+          </div>
+          <div id="character-cards" class="character-grid" aria-label="Character roster"></div>
+          <p class="roster-note">Every fighter shares the same combat stats.</p>
+        </div>
+
+        <div class="preview-column">
+          <div class="preview-frame">
+            <span class="corner corner--tl" aria-hidden="true"></span>
+            <span class="corner corner--tr" aria-hidden="true"></span>
+            <span class="corner corner--bl" aria-hidden="true"></span>
+            <span class="corner corner--br" aria-hidden="true"></span>
+            <canvas id="character-preview" width="192" height="192"
+              aria-label="Animated idle preview of the selected character"></canvas>
+            <span class="preview-frame__caption">IDLE PREVIEW · 64 PX</span>
+          </div>
+          <div class="character-intro" aria-live="polite">
+            <p class="eyebrow">YOUR CHAMPION</p>
+            <h2 id="selected-character-name"></h2>
+            <p id="selected-character-description"></p>
+          </div>
+          <div class="cosmetic-controls">
+            <label>Accent
+              <select id="accent-color" aria-label="Outfit accent color"></select>
+            </label>
+            <label>Headgear
+              <select id="headgear" aria-label="Headgear or hairstyle"></select>
+            </label>
+            <label>Accessory
+              <select id="accessory" aria-label="Character accessory"></select>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="lobby-panel" aria-labelledby="lobby-title">
+        <div class="section-heading">
+          <span class="section-heading__index">02</span>
+          <div>
+            <h2 id="lobby-title">Enter the arena</h2>
+            <p>Invite a friend with a four-letter room code.</p>
+          </div>
+        </div>
+        <div class="lobby-controls">
+          <button id="create-room" class="button button--primary" type="button">Create Room</button>
+          <span class="lobby-divider">OR JOIN</span>
+          <label class="sr-only" for="room-code">Four-letter room code</label>
+          <input id="room-code" type="text" maxlength="4" autocomplete="off"
+            autocapitalize="characters" placeholder="CODE" aria-describedby="room-help">
+          <button id="join-room" class="button button--secondary" type="button">Join Room</button>
+        </div>
+        <p id="room-help" class="lobby-help">Room codes are for finding a match, not account security.</p>
+        <p id="connection-status" class="connection-status" role="status">Connecting to the arena...</p>
+        <p id="menu-error" class="notice notice--error" role="alert"></p>
+      </section>
+      <footer class="menu-footer"><span>SIMULTANEOUS TURNS</span><i></i><span>NO PAY-TO-WIN</span><i></i><span>JUST DUEL</span></footer>
+    </section>
+
+    <section id="match-screen" class="screen match-screen" aria-labelledby="match-heading" hidden>
+      <header class="match-header">
+        <p class="eyebrow">THE DUEL IS UNDERWAY</p>
+        <h1 id="match-heading">THE ARENA</h1>
+        <p id="match-room" class="match-room"></p>
+        <p id="match-status" class="match-status" role="status"></p>
+      </header>
+      <div id="player-identity" class="player-identity" aria-label="Player identities"></div>
+      <div class="battle-frame">
+        <canvas id="battlefield" width="480" height="270" aria-label="Pixel Duel battlefield"></canvas>
+      </div>
+      <div id="match-moves" class="match-moves" aria-label="Choose a move"></div>
+      <section id="match-result" class="match-result" hidden>
+        <h2 id="match-result-title"></h2>
+        <button id="match-rematch" class="button button--primary" type="button">Rematch</button>
+        <p id="match-rematch-status" class="lobby-help"></p>
+      </section>
+    </section>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

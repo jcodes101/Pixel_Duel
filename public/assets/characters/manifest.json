@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "characters": [
+    {
+      "id": "ninja-samurai",
+      "name": "Ninja / Samurai",
+      "description": "A disciplined blade-dancer in layered armor, with a bright scarf trailing every strike.",
+      "shape": "agile",
+      "weapon": "katana",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 4, "breath": 1.2, "blinkEvery": 4.8, "accessoryMotion": "scarf" },
+      "palette": { "primary": "#34435c", "shadow": "#20293a", "skin": "#e6ae86", "metal": "#a7bfd0", "accent": "#e76b65" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["headband", "face-wrap", "crest"],
+        "accessory": ["none", "scarf", "shoulder-guards"]
+      }
+    },
+    {
+      "id": "knight",
+      "name": "Knight",
+      "description": "A steadfast guardian in polished plate, carrying a broad sword and a trusted shield.",
+      "shape": "armored",
+      "weapon": "sword-shield",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 3, "breath": 0.7, "blinkEvery": 5.2, "accessoryMotion": "cape" },
+      "palette": { "primary": "#62768d", "shadow": "#364352", "skin": "#e6b38d", "metal": "#d7dce0", "accent": "#63aee8" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["closed-helm", "open-helm", "winged-helm"],
+        "accessory": ["none", "cape", "shoulder-guards"]
+      }
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "description": "An arcane scholar whose layered robes and living staff shimmer with quiet magic.",
+      "shape": "robed",
+      "weapon": "staff",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 4, "breath": 1, "blinkEvery": 4.4, "accessoryMotion": "orb" },
+      "palette": { "primary": "#57457b", "shadow": "#302543", "skin": "#e8ba98", "metal": "#d4c3ed", "accent": "#b18ae5" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["hood", "star-circlet", "braided-hair"],
+        "accessory": ["none", "spellbook", "floating-orb"]
+      }
+    },
+    {
+      "id": "assassin",
+      "name": "Assassin",
+      "description": "A shadow-quiet scout, hood low and twin daggers ready in a coiled stance.",
+      "shape": "low",
+      "weapon": "dual-daggers",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 5, "breath": 0.8, "blinkEvery": 5.6, "accessoryMotion": "cloak" },
+      "palette": { "primary": "#424452", "shadow": "#252631", "skin": "#d7a185", "metal": "#9ca5b3", "accent": "#65bd8d" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["deep-hood", "half-mask", "tied-hair"],
+        "accessory": ["none", "back-sheath", "neck-wrap"]
+      }
+    },
+    {
+      "id": "brute",
+      "name": "Brute",
+      "description": "A mountain of muscle and rugged iron, hauling a hammer that looks too heavy to lift.",
+      "shape": "heavy",
+      "weapon": "war-hammer",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 2, "breath": 1.8, "blinkEvery": 5.8, "accessoryMotion": "trophy" },
+      "palette": { "primary": "#77533f", "shadow": "#493227", "skin": "#c98969", "metal": "#b5a48b", "accent": "#edc66b" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["barehead", "iron-cap", "horned-helm"],
+        "accessory": ["none", "fur-mantle", "trophy-belt"]
+      }
+    },
+    {
+      "id": "gunslinger",
+      "name": "Gunslinger",
+      "description": "A quick-drawing wanderer in a long coat, brim low against the sparks and dust.",
+      "shape": "ranged",
+      "weapon": "revolver",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 4, "breath": 0.9, "blinkEvery": 5, "accessoryMotion": "coat" },
+      "palette": { "primary": "#765340", "shadow": "#49352a", "skin": "#e5b28a", "metal": "#c6aa80", "accent": "#e76b65" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["wide-brim", "short-brim", "bandana"],
+        "accessory": ["none", "long-coat", "cartridge-belt"]
+      }
+    },
+    {
+      "id": "scythe-wielder",
+      "name": "Scythe Wielder",
+      "description": "A veiled reaper in a ragged cloak, framed by a crescent of spectral steel.",
+      "shape": "cloaked",
+      "weapon": "scythe",
+      "spriteSheet": null,
+      "idle": { "frames": [0, 1, 2, 3], "fps": 3, "breath": 1.1, "blinkEvery": 6, "accessoryMotion": "cloak" },
+      "palette": { "primary": "#4b496a", "shadow": "#282637", "skin": "#c7a6a0", "metal": "#a7b3bd", "accent": "#b18ae5" },
+      "cosmetics": {
+        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
+        "headgear": ["shadow-hood", "open-hood", "bone-mask"],
+        "accessory": ["none", "spectral-trails", "cloak-brooch"]
+      }
+    }
+  ]
+}

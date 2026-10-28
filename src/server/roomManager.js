@@ -1,6 +1,7 @@
 const { randomInt: cryptoRandomInt } = require("node:crypto");
 const { canUseMove, getWinner, resolveCombat } = require("./combat");
 const { EVENTS, PHASES, isValidMove, normalizeRoomCode, serializeRoomState } = require("./protocol");
+const { normalizeJoinRequest, validateCharacterConfiguration } = require("./characterConfig");
 
 const ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 const MAX_ROOM_PLAYERS = 2;
@@ -18,8 +19,17 @@ function generateRoomCode(rooms, randomInt = cryptoRandomInt) {
   return roomCode;
 }
 
-function createPlayer(id, playerIndex) {
-  return { id, playerIndex, hp: 100, move: null, locked: false, cooldown: 0 };
+function createPlayer(id, playerIndex, configuration) {
+  return {
+    id,
+    playerIndex,
+    hp: 100,
+    move: null,
+    locked: false,
+    cooldown: 0,
+    characterId: configuration.characterId,
+    cosmetics: { ...configuration.cosmetics }
+  };
 }
 
 function createRoom(code) {
@@ -61,7 +71,10 @@ function createRoomManager(options = {}) {
     room.phase = PHASES.SELECT;
     room.log = [];
     room.result = null;
-    room.players = room.players.map(player => createPlayer(player.id, player.playerIndex));
+    room.players = room.players.map(player => createPlayer(player.id, player.playerIndex, {
+      characterId: player.characterId,
+      cosmetics: player.cosmetics
+    }));
     room.rematches.clear();
     room.resolutionToken++;
     room.resolutionTimer = null;
@@ -117,7 +130,10 @@ function createRoomManager(options = {}) {
       }
       if (socket.data.room) return { error: "Already in a room." };
 
-      const normalizedCode = normalizeRoomCode(rawCode);
+      const request = normalizeJoinRequest(rawCode);
+      if (!request.ok) return { error: request.error };
+
+      const normalizedCode = normalizeRoomCode(request.code);
       if (normalizedCode === null) return { error: "Enter a 4-letter code." };
 
       const code = normalizedCode || generateRoomCode(rooms, randomInt);
@@ -131,7 +147,7 @@ function createRoomManager(options = {}) {
       }
 
       const playerIndex = room.players.length;
-      room.players.push(createPlayer(socket.id, playerIndex));
+      room.players.push(createPlayer(socket.id, playerIndex, request.configuration));
       socket.data.room = code;
       if (room.players.length === MAX_ROOM_PLAYERS) reset(room);
       return { code, playerIndex };
@@ -140,6 +156,23 @@ function createRoomManager(options = {}) {
     publishRoom(code) {
       const room = rooms.get(code);
       if (room) publish(room);
+    },
+
+    configurePlayer(socket, configuration) {
+      const room = rooms.get(socket.data.room);
+      if (!room || room.phase !== PHASES.WAITING) {
+        return { error: "Character selection is locked after the match starts." };
+      }
+      const player = room.players.find(candidate => candidate.id === socket.id);
+      if (!player) return { error: "You are not a player in this room." };
+
+      const validated = validateCharacterConfiguration(configuration);
+      if (!validated.ok) return { error: validated.error };
+
+      player.characterId = validated.configuration.characterId;
+      player.cosmetics = { ...validated.configuration.cosmetics };
+      publish(room);
+      return { ok: true };
     },
 
     submitMove(socket, move) {

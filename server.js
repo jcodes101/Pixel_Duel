@@ -14,9 +14,7 @@ function createGameServer(options = {}) {
     emitToSocket: (socketId, event, payload) => io.to(socketId).emit(event, payload)
   });
 
-  app.get("/", (_, response) => {
-    response.sendFile(path.join(__dirname, "index.html"));
-  });
+  app.use(express.static(path.join(__dirname, "public")));
   registerSocketHandlers(io, roomManager);
 
   return { app, server, io, roomManager };

@@ -22,6 +22,10 @@ function registerSocketHandlers(io, roomManager) {
       roomManager.publishRoom(result.code);
     });
 
+    socket.on(EVENTS.CONFIGURE, (configuration, reply) => {
+      acknowledge(reply, roomManager.configurePlayer(socket, configuration));
+    });
+
     socket.on(EVENTS.MOVE, (move, reply) => {
       acknowledge(reply, roomManager.submitMove(socket, move));
     });
