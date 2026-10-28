@@ -3,8 +3,12 @@ import { drawMap } from "../game/mapRenderer.js";
 function createPreview(canvas, map, width = 160, height = 90) {
   canvas.width = width;
   canvas.height = height;
-  canvas.getContext("2d").imageSmoothingEnabled = false;
-  drawMap(canvas.getContext("2d"), map, 0, 0, null, true);
+  const context = canvas.getContext("2d");
+  context.imageSmoothingEnabled = false;
+  context.save();
+  context.scale(width / 480, height / 270);
+  drawMap(context, map, 0, 0, null, true);
+  context.restore();
 }
 
 export function createMapVote(maps, submitVote) {

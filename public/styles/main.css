@@ -125,7 +125,7 @@ button { touch-action: manipulation; }
 
 .character-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -195,9 +195,34 @@ button { touch-action: manipulation; }
 .character-intro h2 { margin: 2px 0 3px; color: var(--gold); font-size: 18px; }
 .character-intro > p:last-child { min-height: 35px; margin: 0; color: #b8b2a7; font-size: 11px; }
 
-.cosmetic-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.cosmetic-controls label { display: grid; gap: 4px; color: #bcb6a9; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
-.cosmetic-controls select, #room-code {
+.selected-variant { min-height: 18px !important; margin-top: 4px !important; color: #9eabbc !important; font-size: 9px !important; }
+.selected-variant strong { color: var(--gold); }
+.variant-stage { margin-top: 10px; }
+.variant-stage__heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 7px; }
+.variant-stage__heading h3 { margin: 0; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.variant-stage__heading span { color: #8f8c98; font-size: 8px; }
+.variant-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.variant-card {
+  display: flex;
+  min-width: 0;
+  min-height: 102px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 5px 3px 6px;
+  border: 1px solid #454657;
+  border-radius: 0;
+  color: #c9c4b8;
+  background: #171822;
+  cursor: pointer;
+  transition: border-color .14s ease, background-color .14s ease, transform .14s ease;
+}
+.variant-card:hover { border-color: #9e865f; background: #242435; transform: translateY(-1px); }
+.variant-card.selected { border-color: var(--gold); background: #2a2935; box-shadow: inset 0 0 0 1px #8f7242; }
+.variant-card__portrait { width: 76px; height: 76px; image-rendering: pixelated; }
+.variant-card__name { max-width: 100%; overflow-wrap: anywhere; color: var(--ink); font-size: 8px; line-height: 1.25; text-align: center; }
+#room-code {
   width: 100%;
   min-height: 38px;
   padding: 7px 8px;
@@ -327,11 +352,14 @@ button { touch-action: manipulation; }
 }
 
 @media (max-width: 480px) {
-  .character-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+  .character-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
   .character-card { min-height: 94px; padding: 5px 2px; }
   .character-card__portrait { width: 56px; height: 56px; }
   .character-card__name { font-size: 8px; }
-  .cosmetic-controls { grid-template-columns: 1fr; }
+  .variant-grid { gap: 5px; }
+  .variant-card { min-height: 90px; padding: 4px 2px; }
+  .variant-card__portrait { width: 68px; height: 68px; }
+  .variant-card__name { font-size: 7px; }
   .lobby-controls { display: grid; grid-template-columns: 1fr 1fr; }
   .lobby-divider { grid-column: 1 / -1; }
   #room-code { width: 100%; }

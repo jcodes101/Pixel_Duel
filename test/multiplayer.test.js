@@ -168,56 +168,66 @@ test("characters synchronize, lock at match start, and persist through a rematch
   const knight = {
     code: "CAST",
     characterId: "knight",
-    cosmetics: { accentColor: "azure", headgear: "winged-helm", accessory: "cape" }
+    variantId: "knight-2"
   };
-  const mage = {
+  const wizard = {
     code: "CAST",
-    characterId: "mage",
-    cosmetics: { accentColor: "violet", headgear: "hood", accessory: "floating-orb" }
+    characterId: "wizard",
+    variantId: "lightning-mage"
   };
 
   const firstWaiting = waitForEvent(first, "state", state => state.phase === "WAITING");
   assert.deepEqual(await join(first, knight), { code: "CAST" });
   const firstInitial = await firstWaiting;
   assert.equal(firstInitial.players[0].characterId, "knight");
-  assert.deepEqual(firstInitial.players[0].cosmetics, knight.cosmetics);
+  assert.equal(firstInitial.players[0].variantId, "knight-2");
 
   const invalidClaim = await emitWithAck(first, "configure", {
-    characterId: "assassin",
-    cosmetics: { accentColor: "ember", headgear: "deep-hood", accessory: "none" },
+    characterId: "ninja",
+    variantId: "ninja-monk",
     playerIndex: 1
   });
   assert.match(invalidClaim.error, /unsupported fields/i);
 
+  assert.match((await emitWithAck(first, "configure", {
+    characterId: "ninja",
+    variantId: "samurai-archer"
+  })).error, /variant/i);
+
   const ownConfiguration = waitForEvent(first, "state",
-    state => state.phase === "WAITING" && state.players[0].characterId === "assassin");
+    state => state.phase === "WAITING" && state.players[0].characterId === "skeleton");
   const changed = await emitWithAck(first, "configure", {
-    characterId: "assassin",
-    cosmetics: { accentColor: "jade", headgear: "deep-hood", accessory: "neck-wrap" }
+    characterId: "skeleton",
+    variantId: "skeleton-spearman"
   });
   assert.deepEqual(changed, { ok: true });
   const changedState = await ownConfiguration;
   assert.equal(changedState.players.length, 1);
-  assert.equal(changedState.players[0].characterId, "assassin");
+  assert.equal(changedState.players[0].characterId, "skeleton");
+  assert.equal(changedState.players[0].variantId, "skeleton-spearman");
 
-  const { joined, selectStates } = await joinAndStartMatch(first, second, mage);
+  const { joined, selectStates } = await joinAndStartMatch(first, second, wizard);
   assert.deepEqual(joined, { code: "CAST" });
   const [firstState, secondState] = selectStates;
   assert.equal(firstState.you, 0);
   assert.equal(secondState.you, 1);
-  assert.equal(firstState.players[0].characterId, "assassin");
-  assert.equal(firstState.players[1].characterId, "mage");
-  assert.equal(secondState.players[0].characterId, "assassin");
-  assert.equal(secondState.players[1].characterId, "mage");
-  assert.deepEqual(firstState.players[1].cosmetics, mage.cosmetics);
-  assert.deepEqual(secondState.players[0].cosmetics, changedState.players[0].cosmetics);
+  assert.equal(firstState.players[0].characterId, "skeleton");
+  assert.equal(firstState.players[0].variantId, "skeleton-spearman");
+  assert.equal(firstState.players[1].characterId, "wizard");
+  assert.equal(firstState.players[1].variantId, "lightning-mage");
+  assert.equal(secondState.players[0].characterId, "skeleton");
+  assert.equal(secondState.players[0].variantId, "skeleton-spearman");
+  assert.equal(secondState.players[1].characterId, "wizard");
+  assert.equal(secondState.players[1].variantId, "lightning-mage");
+  assert.equal(Object.hasOwn(firstState.players[0], "cosmetics"), false);
 
   const lockedConfiguration = await emitWithAck(first, "configure", {
-    characterId: "brute",
-    cosmetics: { accentColor: "gold", headgear: "iron-cap", accessory: "fur-mantle" }
+    characterId: "knight",
+    variantId: "knight-3"
   });
   assert.match(lockedConfiguration.error, /locked/i);
-  assert.equal(game.roomManager.rooms.get("CAST").players[0].characterId, "assassin");
+  assert.equal(game.roomManager.rooms.get("CAST").players[0].characterId, "skeleton");
+  assert.equal(game.roomManager.rooms.get("CAST").players[0].variantId, "skeleton-spearman");
 
   const room = game.roomManager.rooms.get("CAST");
   room.players.forEach(player => { player.hp = 1; });
@@ -236,10 +246,10 @@ test("characters synchronize, lock at match start, and persist through a rematch
   const [afterRematchFirst, afterRematchSecond] =
     await Promise.all([firstReset, secondReset]);
   for (const state of [afterRematchFirst, afterRematchSecond]) {
-    assert.equal(state.players[0].characterId, "assassin");
-    assert.equal(state.players[1].characterId, "mage");
-    assert.deepEqual(state.players[0].cosmetics, changedState.players[0].cosmetics);
-    assert.deepEqual(state.players[1].cosmetics, mage.cosmetics);
+    assert.equal(state.players[0].characterId, "skeleton");
+    assert.equal(state.players[0].variantId, "skeleton-spearman");
+    assert.equal(state.players[1].characterId, "wizard");
+    assert.equal(state.players[1].variantId, "lightning-mage");
     assert.equal(state.mapId, selectedMap);
     assert.equal(state.players[0].cooldown, 0);
     assert.equal(state.players[1].cooldown, 0);

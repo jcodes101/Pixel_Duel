@@ -1,112 +1,2712 @@
 {
-  "version": 1,
-  "frameWidth": 64,
-  "frameHeight": 64,
-  "characters": [
+  "version": 2,
+  "frameOrder": "left-to-right",
+  "classes": [
     {
-      "id": "ninja-samurai",
-      "name": "Ninja / Samurai",
-      "description": "A disciplined blade-dancer in layered armor, with a bright scarf trailing every strike.",
-      "shape": "agile",
-      "weapon": "katana",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 4, "breath": 1.2, "blinkEvery": 4.8, "accessoryMotion": "scarf" },
-      "palette": { "primary": "#34435c", "shadow": "#20293a", "skin": "#e6ae86", "metal": "#a7bfd0", "accent": "#e76b65" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["headband", "face-wrap", "crest"],
-        "accessory": ["none", "scarf", "shoulder-guards"]
-      }
+      "id": "ninja",
+      "name": "Ninja",
+      "description": "Swift shadow fighters in three distinct disguises.",
+      "variants": [
+        {
+          "id": "kunoichi",
+          "name": "Kunoichi",
+          "folder": "Kunoichi",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.938,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 80,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "cast": {
+              "file": "Cast.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "eating": {
+              "file": "Eating.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 71,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 10,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": "cast",
+            "special": "attack-2",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "ninja-monk",
+          "name": "Ninja Monk",
+          "folder": "Ninja_Monk",
+          "facing": "right",
+          "frameWidth": 96,
+          "frameHeight": 96,
+          "displayScale": 0.845,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "blade": {
+              "file": "Blade.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "cast": {
+              "file": "Cast.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 5,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 4,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 7,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 9,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": "cast",
+            "special": "attack-2",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "ninja-peasant",
+          "name": "Ninja Peasant",
+          "folder": "Ninja_Peasant",
+          "facing": "right",
+          "frameWidth": 96,
+          "frameHeight": 96,
+          "displayScale": 0.882,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 4,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "disguise": {
+              "file": "Disguise.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 9,
+              "frameDurationMs": 71,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 6,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 8,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 6,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "shot": {
+              "file": "Shot.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 96,
+              "frameHeight": 96,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": null,
+            "special": "attack-2",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        }
+      ]
+    },
+    {
+      "id": "samurai",
+      "name": "Samurai",
+      "description": "Honor-bound warriors with a blade, bow, or commanderâ€™s banner.",
+      "variants": [
+        {
+          "id": "samurai",
+          "name": "Samurai",
+          "folder": "Samurai",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.87,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protection": {
+              "file": "Protection.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "protection",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "samurai-archer",
+          "name": "Samurai Archer",
+          "folder": "Samurai_Archer",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.583,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "shot": {
+              "file": "Shot.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 14,
+              "frameDurationMs": 46,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "samurai-commander",
+          "name": "Samurai Commander",
+          "folder": "Samurai_Commander",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.652,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protect": {
+              "file": "Protect.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "protect",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        }
+      ]
     },
     {
       "id": "knight",
       "name": "Knight",
-      "description": "A steadfast guardian in polished plate, carrying a broad sword and a trusted shield.",
-      "shape": "armored",
-      "weapon": "sword-shield",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 3, "breath": 0.7, "blinkEvery": 5.2, "accessoryMotion": "cape" },
-      "palette": { "primary": "#62768d", "shadow": "#364352", "skin": "#e6b38d", "metal": "#d7dce0", "accent": "#63aee8" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["closed-helm", "open-helm", "winged-helm"],
-        "accessory": ["none", "cape", "shoulder-guards"]
-      }
+      "description": "Armored champions in three distinct color variants.",
+      "variants": [
+        {
+          "id": "knight-1",
+          "name": "Knight 1",
+          "folder": "Knight_1",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.938,
+          "animations": {
+            "attack-1": {
+              "file": "Attack 1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack 2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack 3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "defend": {
+              "file": "Defend.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protect": {
+              "file": "Protect.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 1,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run-attack": {
+              "file": "Run+Attack.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "defend",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "knight-2",
+          "name": "Knight 2",
+          "folder": "Knight_2",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.938,
+          "animations": {
+            "attack-1": {
+              "file": "Attack 1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack 2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack 3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "defend": {
+              "file": "Defend.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protect": {
+              "file": "Protect.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 1,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run-attack": {
+              "file": "Run+Attack.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "defend",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "knight-3",
+          "name": "Knight 3",
+          "folder": "Knight_3",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.938,
+          "animations": {
+            "attack-1": {
+              "file": "Attack 1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack 2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack 3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "defend": {
+              "file": "Defend.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protect": {
+              "file": "Protect.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 1,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run-attack": {
+              "file": "Run+Attack.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "defend",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        }
+      ]
     },
     {
-      "id": "mage",
-      "name": "Mage",
-      "description": "An arcane scholar whose layered robes and living staff shimmer with quiet magic.",
-      "shape": "robed",
-      "weapon": "staff",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 4, "breath": 1, "blinkEvery": 4.4, "accessoryMotion": "orb" },
-      "palette": { "primary": "#57457b", "shadow": "#302543", "skin": "#e8ba98", "metal": "#d4c3ed", "accent": "#b18ae5" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["hood", "star-circlet", "braided-hair"],
-        "accessory": ["none", "spellbook", "floating-orb"]
-      }
+      "id": "wizard",
+      "name": "Wizard",
+      "description": "Spellcasters specializing in fire, lightning, or wandering magic.",
+      "variants": [
+        {
+          "id": "fire-wizard",
+          "name": "Fire Wizard",
+          "folder": "Fire Wizard",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.909,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "charge": {
+              "file": "Charge.png",
+              "frameWidth": 128,
+              "frameHeight": 64,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "fireball": {
+              "file": "Fireball.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 80,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "flame-jet": {
+              "file": "Flame_jet.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 14,
+              "frameDurationMs": 46,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": "attack-2",
+            "special": "fireball",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "lightning-mage",
+          "name": "Lightning Mage",
+          "folder": "Lightning Mage",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.952,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 10,
+              "frameDurationMs": 64,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "charge": {
+              "file": "Charge.png",
+              "frameWidth": 128,
+              "frameHeight": 64,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "light-ball": {
+              "file": "Light_ball.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "light-charge": {
+              "file": "Light_charge.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 13,
+              "frameDurationMs": 49,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": "attack-2",
+            "special": "light-ball",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "wanderer-magican",
+          "name": "Wanderer Magican",
+          "folder": "Wanderer Magican",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.909,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 9,
+              "frameDurationMs": 71,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "charge-1": {
+              "file": "Charge_1.png",
+              "frameWidth": 96,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "charge-2": {
+              "file": "Charge_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "magic-arrow": {
+              "file": "Magic_arrow.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "magic-sphere": {
+              "file": "Magic_sphere.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 16,
+              "frameDurationMs": 40,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": "attack-2",
+            "special": "magic-sphere",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        }
+      ]
     },
     {
-      "id": "assassin",
-      "name": "Assassin",
-      "description": "A shadow-quiet scout, hood low and twin daggers ready in a coiled stance.",
-      "shape": "low",
-      "weapon": "dual-daggers",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 5, "breath": 0.8, "blinkEvery": 5.6, "accessoryMotion": "cloak" },
-      "palette": { "primary": "#424452", "shadow": "#252631", "skin": "#d7a185", "metal": "#9ca5b3", "accent": "#65bd8d" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["deep-hood", "half-mask", "tied-hair"],
-        "accessory": ["none", "back-sheath", "neck-wrap"]
-      }
+      "id": "skeleton",
+      "name": "Skeleton",
+      "description": "Undead fighters armed as archers, spearmen, or sword warriors.",
+      "variants": [
+        {
+          "id": "skeleton-archer",
+          "name": "Skeleton Archer",
+          "folder": "Skeleton_Archer",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.938,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "evasion": {
+              "file": "Evasion.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "shot-1": {
+              "file": "Shot_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 15,
+              "frameDurationMs": 43,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "shot-2": {
+              "file": "Shot_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 15,
+              "frameDurationMs": 43,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "evasion",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "skeleton-spearman",
+          "name": "Skeleton Spearman",
+          "folder": "Skeleton_Spearman",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.732,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "fall": {
+              "file": "Fall.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protect": {
+              "file": "Protect.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run-attack": {
+              "file": "Run+attack.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "protect",
+            "heal": null,
+            "special": "attack-2",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "skeleton-warrior",
+          "name": "Skeleton Warrior",
+          "folder": "Skeleton_Warrior",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 1.034,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "protect": {
+              "file": "Protect.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 1,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run-attack": {
+              "file": "Run+attack.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": "protect",
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        }
+      ]
     },
     {
-      "id": "brute",
-      "name": "Brute",
-      "description": "A mountain of muscle and rugged iron, hauling a hammer that looks too heavy to lift.",
-      "shape": "heavy",
-      "weapon": "war-hammer",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 2, "breath": 1.8, "blinkEvery": 5.8, "accessoryMotion": "trophy" },
-      "palette": { "primary": "#77533f", "shadow": "#493227", "skin": "#c98969", "metal": "#b5a48b", "accent": "#edc66b" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["barehead", "iron-cap", "horned-helm"],
-        "accessory": ["none", "fur-mantle", "trophy-belt"]
-      }
-    },
-    {
-      "id": "gunslinger",
-      "name": "Gunslinger",
-      "description": "A quick-drawing wanderer in a long coat, brim low against the sparks and dust.",
-      "shape": "ranged",
-      "weapon": "revolver",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 4, "breath": 0.9, "blinkEvery": 5, "accessoryMotion": "coat" },
-      "palette": { "primary": "#765340", "shadow": "#49352a", "skin": "#e5b28a", "metal": "#c6aa80", "accent": "#e76b65" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["wide-brim", "short-brim", "bandana"],
-        "accessory": ["none", "long-coat", "cartridge-belt"]
-      }
-    },
-    {
-      "id": "scythe-wielder",
-      "name": "Scythe Wielder",
-      "description": "A veiled reaper in a ragged cloak, framed by a crescent of spectral steel.",
-      "shape": "cloaked",
-      "weapon": "scythe",
-      "spriteSheet": null,
-      "idle": { "frames": [0, 1, 2, 3], "fps": 3, "breath": 1.1, "blinkEvery": 6, "accessoryMotion": "cloak" },
-      "palette": { "primary": "#4b496a", "shadow": "#282637", "skin": "#c7a6a0", "metal": "#a7b3bd", "accent": "#b18ae5" },
-      "cosmetics": {
-        "accentColor": { "ember": "#e76b65", "azure": "#63aee8", "jade": "#65bd8d", "violet": "#b18ae5", "gold": "#edc66b" },
-        "headgear": ["shadow-hood", "open-hood", "bone-mask"],
-        "accessory": ["none", "spectral-trails", "cloak-brooch"]
-      }
+      "id": "yokai",
+      "name": "Yokai",
+      "description": "Folklore spirits: Karasu Tengu, Kitsune, and Yamabushi Tengu.",
+      "variants": [
+        {
+          "id": "karasu-tengu",
+          "name": "Karasu Tengu",
+          "folder": "Karasu_tengu",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.69,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle-2": {
+              "file": "Idle_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 15,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "kitsune",
+          "name": "Kitsune",
+          "folder": "Kitsune",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.769,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 10,
+              "frameDurationMs": 64,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 10,
+              "frameDurationMs": 64,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 7,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 10,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "fire-1": {
+              "file": "Fire_1.png",
+              "frameWidth": 64,
+              "frameHeight": 64,
+              "frameCount": 14,
+              "frameDurationMs": 46,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "fire-2": {
+              "file": "Fire_2.png",
+              "frameWidth": 64,
+              "frameHeight": 64,
+              "frameCount": 11,
+              "frameDurationMs": 58,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 2,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle-2": {
+              "file": "Idle_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 10,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        },
+        {
+          "id": "yamabushi-tengu",
+          "name": "Yamabushi Tengu",
+          "folder": "Yamabushi_tengu",
+          "facing": "right",
+          "frameWidth": 128,
+          "frameHeight": 128,
+          "displayScale": 0.632,
+          "animations": {
+            "attack-1": {
+              "file": "Attack_1.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-2": {
+              "file": "Attack_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "attack-3": {
+              "file": "Attack_3.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 4,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "dead": {
+              "file": "Dead.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "hurt": {
+              "file": "Hurt.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 3,
+              "frameDurationMs": 78,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle": {
+              "file": "Idle.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 6,
+              "frameDurationMs": 145,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "idle-2": {
+              "file": "Idle_2.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 5,
+              "frameDurationMs": 85,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "jump": {
+              "file": "Jump.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 15,
+              "frameDurationMs": 95,
+              "loop": false,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "run": {
+              "file": "Run.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "walk": {
+              "file": "Walk.png",
+              "frameWidth": 128,
+              "frameHeight": 128,
+              "frameCount": 8,
+              "frameDurationMs": 90,
+              "loop": true,
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "actions": {
+            "attack": "attack-1",
+            "defend": null,
+            "heal": null,
+            "special": "attack-3",
+            "hurt": "hurt",
+            "victory": null,
+            "defeat": "dead"
+          }
+        }
+      ]
     }
   ]
 }

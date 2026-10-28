@@ -1,294 +1,175 @@
-function pixel(context, x, y, width, height, color) {
-  context.fillStyle = color;
-  context.fillRect(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+import { resolveAnimation } from "./assetLoader.mjs";
+
+const MISSING_ART = {
+  primary: "#766c8d",
+  dark: "#282a39",
+  light: "#ddd5c2"
+};
+
+const CLASS_EFFECTS = {
+  ninja: "#8fe0c0",
+  samurai: "#f2c66f",
+  knight: "#9cc6e8",
+  wizard: "#c8a4f5",
+  skeleton: "#a8d47a",
+  yokai: "#f08cb9"
+};
+
+function getVariant(character, configuration) {
+  return character?.variants.find(variant => variant.id === configuration?.variantId) ||
+    character?.variants[0] || null;
 }
 
-function getAccent(character, cosmetics) {
-  return character.cosmetics.accentColor[cosmetics?.accentColor] || character.palette.accent;
+function getFrameIndex(clip, elapsedMs) {
+  if (!clip || clip.frameCount <= 1) return 0;
+  const rawFrame = Math.floor(Math.max(0, elapsedMs) / clip.frameDurationMs);
+  return clip.loop ? rawFrame % clip.frameCount : Math.min(clip.frameCount - 1, rawFrame);
 }
 
-function drawHeadgear(context, character, headgear, accent) {
-  const metal = character.palette.metal;
-  const dark = character.palette.shadow;
-  switch (headgear) {
-    case "closed-helm":
-    case "open-helm":
-    case "winged-helm":
-    case "iron-cap":
-    case "horned-helm":
-      pixel(context, 22, 7, 20, 7, metal);
-      pixel(context, 19, 12, 26, 4, metal);
-      pixel(context, 23, 16, 18, 3, dark);
-      pixel(context, 27, 16, 3, 2, accent);
-      if (headgear === "winged-helm") {
-        pixel(context, 16, 4, 8, 3, accent);
-        pixel(context, 40, 4, 8, 3, accent);
-      }
-      if (headgear === "horned-helm") {
-        pixel(context, 15, 5, 5, 3, metal);
-        pixel(context, 44, 5, 5, 3, metal);
-      }
-      break;
-    case "wide-brim":
-    case "short-brim":
-      pixel(context, 21, 5, 22, 7, dark);
-      pixel(context, headgear === "wide-brim" ? 11 : 17, 12,
-        headgear === "wide-brim" ? 42 : 30, 3, character.palette.primary);
-      pixel(context, 24, 9, 15, 3, accent);
-      break;
-    case "hood":
-    case "deep-hood":
-    case "shadow-hood":
-    case "open-hood":
-      pixel(context, 19, 5, 27, 7, character.palette.primary);
-      pixel(context, 16, 11, 6, 9, character.palette.primary);
-      pixel(context, 43, 11, 6, 9, character.palette.primary);
-      pixel(context, 23, 15, 19, 4, dark);
-      break;
-    case "face-wrap":
-    case "half-mask":
-    case "bandana":
-    case "bone-mask":
-      pixel(context, 21, 14, 23, 6, accent);
-      break;
-    case "headband":
-      pixel(context, 19, 11, 28, 4, accent);
-      pixel(context, 43, 12, 10, 2, accent);
-      pixel(context, 49, 14, 4, 7, accent);
-      break;
-    case "star-circlet":
-      pixel(context, 21, 8, 23, 3, metal);
-      pixel(context, 29, 4, 6, 5, accent);
-      pixel(context, 31, 2, 2, 3, "#fff0a8");
-      break;
-    case "braided-hair":
-    case "tied-hair":
-      pixel(context, 20, 7, 24, 7, character.palette.primary);
-      pixel(context, 42, 11, 4, 13, character.palette.primary);
-      pixel(context, 46, 20, 4, 9, accent);
-      break;
-    case "barehead":
-      pixel(context, 22, 7, 21, 5, character.palette.skin);
-      break;
-    default:
-      pixel(context, 21, 7, 23, 5, character.palette.primary);
-  }
+export function getAnimationDuration(variant, action) {
+  const resolved = resolveAnimation(variant, action);
+  return resolved ? resolved.clip.frameCount * resolved.clip.frameDurationMs : 0;
 }
 
-function drawAccessory(context, character, accessory, accent, motion) {
-  const metal = character.palette.metal;
-  switch (accessory) {
-    case "scarf":
-    case "neck-wrap":
-      pixel(context, 18, 21, 27, 5, accent);
-      pixel(context, 13 + motion, 24, 8, 4, accent);
-      pixel(context, 7 + motion, 27, 8, 3, accent);
-      break;
-    case "shoulder-guards":
-      pixel(context, 11, 25, 12, 8, metal);
-      pixel(context, 41, 25, 12, 8, metal);
-      pixel(context, 13, 27, 8, 2, accent);
-      pixel(context, 43, 27, 8, 2, accent);
-      break;
-    case "cape":
-    case "long-coat":
-      pixel(context, 13, 25, 9, 26, character.palette.shadow);
-      pixel(context, 42, 25, 9, 26, character.palette.shadow);
-      pixel(context, 14, 47, 8, 5, accent);
-      pixel(context, 43, 47, 8, 5, accent);
-      break;
-    case "spellbook":
-      pixel(context, 4, 34, 10, 13, "#7b4b55");
-      pixel(context, 6, 36, 6, 9, "#e5c987");
-      pixel(context, 8, 39, 2, 3, accent);
-      break;
-    case "floating-orb":
-      pixel(context, 48, 25 + motion, 7, 7, accent);
-      pixel(context, 50, 23 + motion, 3, 11, "#fff0a8");
-      break;
-    case "back-sheath":
-      pixel(context, 13, 23, 5, 23, metal);
-      pixel(context, 12, 22, 7, 3, accent);
-      break;
-    case "fur-mantle":
-      pixel(context, 12, 23, 41, 10, "#c8aa82");
-      pixel(context, 16, 21, 5, 5, "#e4d0a8");
-      pixel(context, 44, 21, 5, 5, "#e4d0a8");
-      break;
-    case "trophy-belt":
-      pixel(context, 16, 43, 34, 5, accent);
-      pixel(context, 42, 45, 5, 7, metal);
-      break;
-    case "cartridge-belt":
-      pixel(context, 16, 42, 34, 4, accent);
-      for (let x = 20; x < 45; x += 6) pixel(context, x, 45, 3, 4, metal);
-      break;
-    case "spectral-trails":
-      pixel(context, 8 + motion, 31, 5, 14, accent);
-      pixel(context, 3 + motion, 37, 5, 12, "#d4c3ed");
-      break;
-    case "cloak-brooch":
-      pixel(context, 29, 25, 7, 7, accent);
-      pixel(context, 31, 27, 3, 3, "#fff0a8");
-      break;
-  }
+function drawMissingArt(context, centerX, baseline) {
+  context.fillStyle = "#171923";
+  context.fillRect(Math.round(centerX - 17), Math.round(baseline - 8), 34, 7);
+  context.fillStyle = MISSING_ART.dark;
+  context.fillRect(Math.round(centerX - 11), Math.round(baseline - 27), 22, 19);
+  context.fillRect(Math.round(centerX - 8), Math.round(baseline - 42), 16, 15);
+  context.fillStyle = MISSING_ART.primary;
+  context.fillRect(Math.round(centerX - 13), Math.round(baseline - 31), 26, 12);
+  context.fillRect(Math.round(centerX - 9), Math.round(baseline - 48), 18, 9);
+  context.fillStyle = MISSING_ART.light;
+  context.fillRect(Math.round(centerX - 5), Math.round(baseline - 38), 3, 2);
+  context.fillRect(Math.round(centerX + 2), Math.round(baseline - 38), 3, 2);
 }
 
-function drawWeapon(context, character, accent, motion) {
-  const metal = character.palette.metal;
-  switch (character.weapon) {
-    case "katana":
-      pixel(context, 47, 8 + motion, 3, 35, metal);
-      pixel(context, 44, 38 + motion, 9, 4, character.palette.shadow);
-      pixel(context, 42, 39 + motion, 3, 10, accent);
-      break;
-    case "sword-shield":
-      pixel(context, 49, 13, 3, 31, metal);
-      pixel(context, 46, 39, 9, 4, character.palette.shadow);
-      pixel(context, 5, 28, 12, 17, accent);
-      pixel(context, 8, 31, 6, 11, metal);
-      pixel(context, 10, 34, 2, 5, accent);
-      break;
-    case "staff":
-      pixel(context, 48, 11 + motion, 4, 45, "#9a704a");
-      pixel(context, 45, 7 + motion, 10, 8, accent);
-      pixel(context, 48, 4 + motion, 4, 14, "#fff0a8");
-      break;
-    case "dual-daggers":
-      pixel(context, 8, 30, 3, 17, metal);
-      pixel(context, 6, 27, 7, 5, accent);
-      pixel(context, 52, 29, 3, 17, metal);
-      pixel(context, 50, 43, 7, 5, accent);
-      break;
-    case "war-hammer":
-      pixel(context, 49, 23, 5, 32, "#805c3d");
-      pixel(context, 42, 13, 18, 14, metal);
-      pixel(context, 45, 16, 12, 8, accent);
-      break;
-    case "revolver":
-      pixel(context, 48, 29, 14, 7, metal);
-      pixel(context, 53, 35, 5, 11, "#79513a");
-      pixel(context, 59, 31, 4, 3, accent);
-      break;
-    case "scythe":
-      pixel(context, 49, 18, 4, 43, "#786247");
-      pixel(context, 39, 7 + motion, 16, 5, metal);
-      pixel(context, 35, 7 + motion, 8, 6, accent);
-      pixel(context, 40, 12 + motion, 4, 6, metal);
-      break;
+export function drawCharacterArt(
+  context,
+  character,
+  configuration,
+  time = 0,
+  options = {}
+) {
+  const variant = getVariant(character, configuration);
+  if (!variant) return { complete: false, variant: null, fallback: true };
+
+  const action = options.action || "idle";
+  const resolved = resolveAnimation(variant, action, true) ||
+    resolveAnimation(variant, "idle", true);
+  const centerX = options.centerX ?? 0;
+  const baseline = options.baseline ?? 0;
+  if (!resolved?.clip.image) {
+    drawMissingArt(context, centerX, baseline);
+    return { complete: false, variant, fallback: true };
   }
+
+  const clip = resolved.clip;
+  const elapsedMs = Math.max(0, options.elapsedMs ?? time * 1000);
+  const frameIndex = getFrameIndex(clip, elapsedMs);
+  const complete = !clip.loop && elapsedMs >= clip.frameCount * clip.frameDurationMs;
+  const sourceX = frameIndex * clip.frameWidth;
+  const offsetX = clip.offset?.x || 0;
+  const offsetY = clip.offset?.y || 0;
+  const scale = variant.displayScale * (options.scaleMultiplier || 1);
+  const facesRight = variant.facing === "right";
+  const shouldFaceRight = options.shouldFaceRight ?? true;
+  const flipX = facesRight !== shouldFaceRight;
+
+  context.save();
+  context.translate(Math.round(centerX), Math.round(baseline));
+  context.scale((flipX ? -1 : 1) * scale, scale);
+  context.drawImage(clip.image,
+    sourceX, 0, clip.frameWidth, clip.frameHeight,
+    -clip.frameWidth / 2 + offsetX, -clip.frameHeight + offsetY,
+    clip.frameWidth, clip.frameHeight);
+  context.restore();
+
+  if (complete && typeof options.onComplete === "function") options.onComplete(action);
+  return { complete, variant, animationId: resolved.animationId, fallback: resolved.fallback };
 }
 
-export function drawCharacterArt(context, character, configuration, time = 0) {
-  if (!character) return;
-  const cosmetics = configuration?.cosmetics || {};
-  const accent = getAccent(character, cosmetics);
-  const motion = Math.round(Math.sin(time * 1.7) * 1.5);
-  if (character.spriteImage?.complete && character.spriteImage.naturalWidth > 0) {
-    const frameWidth = character.frameWidth || 64;
-    const frameHeight = character.frameHeight || 64;
-    const clip = character.idle.frames || [0];
-    const frameIndex = clip[Math.floor(time * (character.idle.fps || 4)) % clip.length];
-    const columns = Math.max(1, Math.floor(character.spriteImage.naturalWidth / frameWidth));
-    const sourceX = (frameIndex % columns) * frameWidth;
-    const sourceY = Math.floor(frameIndex / columns) * frameHeight;
-    context.drawImage(character.spriteImage, sourceX, sourceY, frameWidth, frameHeight,
-      0, 0, 64, 64);
-    drawHeadgear(context, character, cosmetics.headgear, accent);
-    drawAccessory(context, character, cosmetics.accessory, accent, motion);
-    return;
-  }
-  const breath = Math.sin(time * 2.2) * character.idle.breath;
-  const blinkWindow = (time % character.idle.blinkEvery);
-  const blinking = blinkWindow > character.idle.blinkEvery - 0.13;
-  const dark = character.palette.shadow;
-  const base = character.palette.primary;
-  const metal = character.palette.metal;
-  const shape = character.shape;
+export function drawMoveEffect(context, effect) {
+  if (!effect) return;
+  const {
+    action,
+    characterId,
+    centerX,
+    baseline,
+    facing,
+    elapsedMs = 0,
+    reducedMotion = false,
+    shieldFallback = false,
+    hit = false
+  } = effect;
+  const color = CLASS_EFFECTS[characterId] || "#e9c67b";
+  const pulse = reducedMotion ? 0 : Math.round(Math.sin(elapsedMs / 66) * 2);
 
-  pixel(context, 15, 57, 34, 4, "#171724");
-  drawAccessory(context, character, cosmetics.accessory, accent, motion);
-  drawWeapon(context, character, accent, motion);
-
-  if (shape === "low") {
-    pixel(context, 18, 43 + breath, 12, 12, base);
-    pixel(context, 32, 39 + breath, 17, 10, base);
-    pixel(context, 10, 51, 15, 5, dark);
-    pixel(context, 38, 48, 14, 5, dark);
-  } else if (shape === "heavy") {
-    pixel(context, 12, 41 + breath, 17, 15, base);
-    pixel(context, 35, 41 + breath, 17, 15, base);
-    pixel(context, 10, 53, 19, 5, dark);
-    pixel(context, 34, 53, 20, 5, dark);
-  } else if (shape === "robed" || shape === "cloaked") {
-    pixel(context, 23, 42 + breath, 18, 14, base);
-    pixel(context, 17, 50, 30, 8, base);
-    pixel(context, 13, 55, 38, 5, dark);
-    pixel(context, 25, 50, 4, 7, accent);
-  } else {
-    pixel(context, 21, 42 + breath, 10, 14, base);
-    pixel(context, 34, 42 + breath, 10, 14, base);
-    pixel(context, 18, 53, 15, 5, dark);
-    pixel(context, 32, 53, 16, 5, dark);
+  if (action === "heal") {
+    context.save();
+    context.globalAlpha = reducedMotion ? 0.72 : 0.38 + Math.abs(Math.sin(elapsedMs / 190)) * 0.5;
+    context.strokeStyle = "#8de08d";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.arc(Math.round(centerX), Math.round(baseline - 34 - pulse), 12 + Math.abs(pulse), 0, Math.PI * 2);
+    context.stroke();
+    context.fillStyle = "#a4f28e";
+    for (let i = 0; i < 4; i++) {
+      const x = Math.round(centerX - 13 + i * 9);
+      const y = Math.round(baseline - 20 - ((elapsedMs / 42 + i * 7) % 25));
+      context.fillRect(x, y, 2, 3);
+    }
+    context.restore();
   }
 
-  if (shape === "armored") {
-    pixel(context, 15, 25 + breath, 34, 22, metal);
-    pixel(context, 18, 28 + breath, 28, 16, base);
-    pixel(context, 29, 27 + breath, 5, 20, accent);
-    pixel(context, 15, 31, 7, 15, metal);
-    pixel(context, 42, 31, 7, 15, metal);
-  } else if (shape === "heavy") {
-    pixel(context, 9, 25 + breath, 46, 23, base);
-    pixel(context, 15, 28 + breath, 34, 15, dark);
-    pixel(context, 12, 26, 13, 10, metal);
-    pixel(context, 39, 26, 13, 10, metal);
-    pixel(context, 28, 30, 9, 7, accent);
-  } else if (shape === "robed") {
-    pixel(context, 21, 23 + breath, 22, 21, base);
-    pixel(context, 16, 38, 32, 14, base);
-    pixel(context, 12, 48, 40, 11, dark);
-    pixel(context, 25, 29, 14, 17, accent);
-    pixel(context, 29, 30, 5, 14, metal);
-  } else if (shape === "cloaked") {
-    pixel(context, 19, 23 + breath, 27, 26, dark);
-    pixel(context, 14, 39, 37, 18, base);
-    pixel(context, 10, 50, 45, 10, dark);
-    pixel(context, 28, 29, 9, 16, accent);
-  } else if (shape === "low") {
-    pixel(context, 22, 26 + breath, 25, 19, dark);
-    pixel(context, 17, 35, 34, 14, base);
-    pixel(context, 22, 27, 21, 5, accent);
-  } else if (shape === "ranged") {
-    pixel(context, 20, 24 + breath, 25, 25, base);
-    pixel(context, 15, 32, 35, 22, dark);
-    pixel(context, 21, 26, 6, 18, accent);
-    pixel(context, 37, 29, 5, 16, accent);
-  } else {
-    pixel(context, 20, 24 + breath, 24, 24, base);
-    pixel(context, 17, 28, 30, 7, dark);
-    pixel(context, 28, 28, 8, 18, accent);
+  if (action === "defend" && shieldFallback) {
+    const x = Math.round(centerX - facing * 22);
+    const y = Math.round(baseline - 45);
+    context.save();
+    context.globalAlpha = reducedMotion ? 0.8 : 0.52 + Math.abs(pulse) * 0.08;
+    context.fillStyle = "#8fcee0";
+    context.fillRect(x - 6, y + 1, 12, 17);
+    context.fillRect(x - 4, y - 2, 8, 3);
+    context.fillRect(x - 4, y + 18, 8, 3);
+    context.fillStyle = "#d5edf0";
+    context.fillRect(x - 1, y + 4, 2, 10);
+    context.restore();
   }
 
-  pixel(context, 18, 32, 7, 14, base);
-  pixel(context, 41, 32, 7, 14, base);
-  pixel(context, 16, 42, 9, 7, character.palette.skin);
-  pixel(context, 42, 42, 9, 7, character.palette.skin);
-
-  pixel(context, 22, 8 + breath, 20, 17, character.palette.skin);
-  pixel(context, 19, 13 + breath, 26, 9, character.palette.skin);
-  if (shape === "cloaked" || shape === "robed") {
-    pixel(context, 20, 7 + breath, 24, 13, base);
-    pixel(context, 20, 16 + breath, 24, 4, dark);
+  if ((action === "attack" || action === "special") && elapsedMs < 650) {
+    const swing = reducedMotion ? 0 : Math.max(0, Math.sin(Math.min(1, elapsedMs / 650) * Math.PI));
+    const x = Math.round(centerX + facing * (25 + swing * 14));
+    const y = Math.round(baseline - 41 + pulse);
+    context.save();
+    context.globalAlpha = reducedMotion ? 0.56 : Math.max(0, 0.72 - elapsedMs / 940);
+    context.fillStyle = action === "special" ? color : "#f4e6c5";
+    context.fillRect(x, y, 11, 2);
+    context.fillRect(x + facing * 4, y - 4, 7, 2);
+    context.fillRect(x + facing * 7, y + 4, 6, 2);
+    context.restore();
   }
-  drawHeadgear(context, character, cosmetics.headgear, accent);
-  pixel(context, 25, 18 + breath, 3, blinking ? 1 : 2, dark);
-  pixel(context, 36, 18 + breath, 3, blinking ? 1 : 2, dark);
-  pixel(context, 29, 22 + breath, 7, 2, dark);
 
-  pixel(context, 20, 25, 7, 3, metal);
-  pixel(context, 37, 25, 7, 3, metal);
-  drawAccessory(context, character, cosmetics.accessory, accent, motion);
+  if (hit) {
+    context.save();
+    context.globalAlpha = reducedMotion ? 0.55 : Math.max(0.15, 0.58 - elapsedMs / 1900);
+    context.fillStyle = "#fff4dc";
+    context.fillRect(Math.round(centerX - 9), Math.round(baseline - 48), 3, 3);
+    context.fillRect(Math.round(centerX + 8), Math.round(baseline - 37), 2, 2);
+    context.restore();
+  }
+
+  if (action === "victory") {
+    context.save();
+    context.fillStyle = "#f4d27e";
+    context.globalAlpha = reducedMotion ? 0.72 : 0.45 + Math.abs(pulse) * 0.12;
+    for (let i = 0; i < 5; i++) {
+      const x = Math.round(centerX - 16 + ((elapsedMs / 36 + i * 13) % 32));
+      const y = Math.round(baseline - 56 - ((elapsedMs / 32 + i * 9) % 22));
+      context.fillRect(x, y, 2, 3);
+    }
+    context.restore();
+  }
 }
 
 export function startIdlePreview(canvas, getConfiguration, getCharacter) {
@@ -316,17 +197,16 @@ export function startIdlePreview(canvas, getConfiguration, getCharacter) {
       context.fillRect(x, y, 2, 2);
     }
     context.fillStyle = "#293244";
-    context.fillRect(0, canvas.height - 24, canvas.width, 24);
+    context.fillRect(0, canvas.height - 14, canvas.width, 14);
     context.fillStyle = "#6b6a85";
-    context.fillRect(0, canvas.height - 25, canvas.width, 2);
+    context.fillRect(0, canvas.height - 15, canvas.width, 2);
 
-    const character = getCharacter();
-    context.save();
-    context.translate((canvas.width - 64 * 3) / 2, canvas.height - 24 - 64 * 3);
-    context.scale(3, 3);
-    drawCharacterArt(context, character, getConfiguration(), elapsed);
-    context.restore();
-
+    drawCharacterArt(context, getCharacter(), getConfiguration(), elapsed, {
+      action: "idle",
+      centerX: canvas.width / 2,
+      baseline: canvas.height - 15,
+      scaleMultiplier: 1.45
+    });
     animationFrame = requestAnimationFrame(draw);
   }
 

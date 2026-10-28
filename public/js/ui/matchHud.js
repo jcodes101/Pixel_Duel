@@ -36,9 +36,12 @@ export function createMatchHud(mapVote) {
       label.className = `identity-chip identity-chip--p${index + 1}`;
       label.textContent = getPlayerIdentityLabel(index, localIndex);
       if (player?.characterId) {
-        const character = state.manifest.characters.find(entry =>
+        const character = state.manifest.classes.find(entry =>
           entry.id === player.characterId);
+        const variant = character?.variants.find(entry =>
+          entry.id === player.variantId);
         label.textContent += ` · ${character?.name || "Fighter"}`;
+        if (variant) label.textContent += ` / ${variant.name}`;
       } else {
         label.textContent += " · Waiting";
       }

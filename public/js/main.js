@@ -1,6 +1,9 @@
-import { loadCharacterManifest } from "./game/assetLoader.mjs";
+import {
+  loadCharacterManifest,
+  preloadCharacterAnimations
+} from "./game/assetLoader.mjs";
 import { createBattleCanvas } from "./game/canvas.js";
-import { loadMapManifest } from "./game/maps.js";
+import { loadMapManifest } from "./game/maps.mjs";
 import {
   joinRoom,
   onConnectionChange,
@@ -57,6 +60,11 @@ async function initialize() {
 
   onState(snapshot => {
     gameState = { ...snapshot, manifest, maps };
+    snapshot.players.forEach(player => {
+      if (player?.characterId && player?.variantId) {
+        preloadCharacterAnimations(manifest, player.characterId, player.variantId);
+      }
+    });
     matchHud.render(gameState);
     stopBattleCanvas.stateChanged();
     if (snapshot.phase === "WAITING") {

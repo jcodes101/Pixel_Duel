@@ -31,7 +31,7 @@ function createPlayer(id, playerIndex, configuration) {
     locked: false,
     cooldown: 0,
     characterId: configuration.characterId,
-    cosmetics: { ...configuration.cosmetics }
+    variantId: configuration.variantId
   };
 }
 
@@ -84,7 +84,7 @@ function createRoomManager(options = {}) {
     room.result = null;
     room.players = room.players.map(player => createPlayer(player.id, player.playerIndex, {
       characterId: player.characterId,
-      cosmetics: player.cosmetics
+      variantId: player.variantId
     }));
     room.rematches.clear();
     room.resolutionToken++;
@@ -204,7 +204,7 @@ function createRoomManager(options = {}) {
       if (!validated.ok) return { error: validated.error };
 
       player.characterId = validated.configuration.characterId;
-      player.cosmetics = { ...validated.configuration.cosmetics };
+      player.variantId = validated.configuration.variantId;
       publish(room);
       return { ok: true };
     },

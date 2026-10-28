@@ -1,4 +1,5 @@
 import { createParticles, updateAndDrawParticles } from "./particles.js";
+import { isUsableMapArtwork } from "./maps.mjs";
 
 const WIDTH = 480;
 const HEIGHT = 270;
@@ -178,8 +179,12 @@ function drawAtmosphere(context, map, time) {
   context.globalAlpha = 1;
 }
 
-export function drawMap(context, map, time = 0, delta = 0, system = null, reducedMotion = false) {
-  const safeMap = map?.fallback === "procedural-canvas" ? map : FALLBACK_MAP;
+function getSafeMap(map) {
+  return map?.fallback === "procedural-canvas" ? map : FALLBACK_MAP;
+}
+
+function drawProceduralMap(context, map, time, delta, system, reducedMotion) {
+  const safeMap = getSafeMap(map);
   rect(context, 0, 0, WIDTH, HEIGHT, safeMap.palette.sky);
   if (reducedMotion) time = 0;
   switch (safeMap.environment) {
@@ -194,18 +199,66 @@ export function drawMap(context, map, time = 0, delta = 0, system = null, reduce
   drawFloor(context, safeMap.palette);
 }
 
+function drawParallaxLayer(context, layer, cameraX = 0) {
+  const image = layer?.image;
+  if (!image?.complete || image.naturalWidth <= 0 || image.naturalHeight <= 0) return;
+  const scale = HEIGHT / image.naturalHeight;
+  const drawWidth = Math.max(1, Math.round(image.naturalWidth * scale));
+  const offset = ((cameraX * layer.parallax) % drawWidth + drawWidth) % drawWidth;
+  for (let x = -offset; x < WIDTH; x += drawWidth) {
+    context.drawImage(image, Math.round(x), 0, drawWidth, HEIGHT);
+  }
+}
+
+function drawArtworkLayers(context, map, firstLayer, lastLayer, cameraX = 0) {
+  for (let index = firstLayer; index <= lastLayer; index++) {
+    drawParallaxLayer(context, map.artwork.layers[index], cameraX);
+  }
+}
+
+export function drawMap(context, map, time = 0, delta = 0, system = null, reducedMotion = false) {
+  const safeMap = map?.fallback === "procedural-canvas" ? map : FALLBACK_MAP;
+  if (isUsableMapArtwork(safeMap)) {
+    drawArtworkLayers(context, safeMap, 0, 3);
+    updateAndDrawParticles(context, system, delta, time, reducedMotion);
+    drawParallaxLayer(context, safeMap.artwork.layers[4]);
+  } else {
+    drawProceduralMap(context, safeMap, time, delta, system, reducedMotion);
+  }
+}
+
 export function createMapRenderer(context) {
   let activeMapId = null;
   let particleSystem = null;
+  function activateMap(map) {
+    if (map?.id === activeMapId) return;
+    activeMapId = map?.id || "fallback";
+    particleSystem = createParticles(map?.effects || {
+      type: "leaves", count: 10, color: "#c4d883"
+    });
+  }
+
   return {
-    draw(map, time, delta, reducedMotion) {
-      if (map?.id !== activeMapId) {
-        activeMapId = map?.id || "fallback";
-        particleSystem = createParticles(map?.effects || {
-          type: "leaves", count: 10, color: "#c4d883"
-        });
+    drawBackground(map, time, delta, reducedMotion, cameraX = 0) {
+      activateMap(map);
+      if (!isUsableMapArtwork(map)) {
+        drawProceduralMap(context, map, time, delta, particleSystem, reducedMotion);
+        return FLOOR;
       }
-      drawMap(context, map, time, delta, particleSystem, reducedMotion);
+      drawArtworkLayers(context, map, 0, 3, reducedMotion ? 0 : cameraX);
+      updateAndDrawParticles(context, particleSystem, delta, time, reducedMotion);
+      return map.artwork.floorY;
+    },
+
+    drawForeground(map, cameraX = 0) {
+      if (isUsableMapArtwork(map)) {
+        drawParallaxLayer(context, map.artwork.layers[4], cameraX);
+      }
+    },
+
+    draw(map, time, delta, reducedMotion) {
+      this.drawBackground(map, time, delta, reducedMotion);
+      this.drawForeground(map);
     }
   };
 }

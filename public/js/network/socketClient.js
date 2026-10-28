@@ -17,7 +17,7 @@ export function joinRoom(code, configuration) {
   return emitWithAck("join", {
     code,
     characterId: configuration.characterId,
-    cosmetics: configuration.cosmetics
+    variantId: configuration.variantId
   });
 }
 

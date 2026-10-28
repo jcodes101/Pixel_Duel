@@ -25,8 +25,8 @@
           <div class="section-heading">
             <span class="section-heading__index">01</span>
             <div>
-              <h2>Choose a fighter</h2>
-              <p>Seven paths. One fair fight.</p>
+              <h2>Choose a class</h2>
+              <p>Six equal classes. Real sprite variants.</p>
             </div>
           </div>
           <div id="character-cards" class="character-grid" aria-label="Character roster"></div>
@@ -41,23 +41,20 @@
             <span class="corner corner--br" aria-hidden="true"></span>
             <canvas id="character-preview" width="192" height="192"
               aria-label="Animated idle preview of the selected character"></canvas>
-            <span class="preview-frame__caption">IDLE PREVIEW · 64 PX</span>
+            <span class="preview-frame__caption">ANIMATED IDLE PREVIEW</span>
           </div>
           <div class="character-intro" aria-live="polite">
             <p class="eyebrow">YOUR CHAMPION</p>
             <h2 id="selected-character-name"></h2>
             <p id="selected-character-description"></p>
+            <p class="selected-variant">Variant: <strong id="selected-variant-name"></strong></p>
           </div>
-          <div class="cosmetic-controls">
-            <label>Accent
-              <select id="accent-color" aria-label="Outfit accent color"></select>
-            </label>
-            <label>Headgear
-              <select id="headgear" aria-label="Headgear or hairstyle"></select>
-            </label>
-            <label>Accessory
-              <select id="accessory" aria-label="Character accessory"></select>
-            </label>
+          <div class="variant-stage">
+            <div class="variant-stage__heading">
+              <h3>Choose a variant</h3>
+              <span>Actual sprite artwork</span>
+            </div>
+            <div id="variant-cards" class="variant-grid" aria-label="Available sprite variants"></div>
           </div>
         </div>
       </section>

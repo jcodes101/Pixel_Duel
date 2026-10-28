@@ -1,59 +1,46 @@
 const manifest = require("../../public/assets/characters/manifest.json");
 
-const DEFAULT_CHARACTER_ID = "ninja-samurai";
+const DEFAULT_CHARACTER_ID = "ninja";
 
-function getDefaultCosmetics(character) {
-  return {
-    accentColor: Object.keys(character.cosmetics.accentColor)[0],
-    headgear: character.cosmetics.headgear[0],
-    accessory: character.cosmetics.accessory[0]
-  };
+function getDefaultVariant(character) {
+  return character.variants[0];
+}
+
+function defaultCharacterConfiguration(characterId = DEFAULT_CHARACTER_ID) {
+  const character = manifest.classes.find(entry => entry.id === characterId) ||
+    manifest.classes.find(entry => entry.id === DEFAULT_CHARACTER_ID);
+  return { characterId: character.id, variantId: getDefaultVariant(character).id };
 }
 
 function validateCharacterConfiguration(value) {
   if (value === undefined) {
-    const character = manifest.characters.find(entry => entry.id === DEFAULT_CHARACTER_ID);
-    return {
-      ok: true,
-      configuration: {
-        characterId: character.id,
-        cosmetics: getDefaultCosmetics(character)
-      }
-    };
+    return { ok: true, configuration: defaultCharacterConfiguration() };
   }
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return { ok: false, error: "Invalid character configuration." };
   }
-  if (Object.keys(value).some(key => !["characterId", "cosmetics"].includes(key))) {
+  if (Object.keys(value).some(key => !["characterId", "variantId"].includes(key))) {
     return { ok: false, error: "Character configuration contains unsupported fields." };
   }
 
-  const character = manifest.characters.find(entry => entry.id === value.characterId);
+  const character = manifest.classes.find(entry => entry.id === value.characterId);
   if (!character) return { ok: false, error: "Invalid character selection." };
 
-  const supplied = value.cosmetics === undefined ? {} : value.cosmetics;
-  if (!supplied || typeof supplied !== "object" || Array.isArray(supplied) ||
-      Object.keys(supplied).some(key =>
-        !["accentColor", "headgear", "accessory"].includes(key))) {
-    return { ok: false, error: "Invalid cosmetic selection." };
+  if (value.variantId === undefined) {
+    return {
+      ok: true,
+      configuration: {
+        characterId: character.id,
+        variantId: getDefaultVariant(character).id
+      }
+    };
   }
 
-  const defaults = getDefaultCosmetics(character);
-  const cosmetics = {
-    accentColor: supplied.accentColor ?? defaults.accentColor,
-    headgear: supplied.headgear ?? defaults.headgear,
-    accessory: supplied.accessory ?? defaults.accessory
-  };
-
-  if (!Object.hasOwn(character.cosmetics.accentColor, cosmetics.accentColor) ||
-      !character.cosmetics.headgear.includes(cosmetics.headgear) ||
-      !character.cosmetics.accessory.includes(cosmetics.accessory)) {
-    return { ok: false, error: "Unsupported cosmetics for this character." };
-  }
-
+  const variant = character.variants.find(entry => entry.id === value.variantId);
+  if (!variant) return { ok: false, error: "Invalid variant for this character." };
   return {
     ok: true,
-    configuration: { characterId: character.id, cosmetics }
+    configuration: { characterId: character.id, variantId: variant.id }
   };
 }
 
@@ -62,24 +49,25 @@ function normalizeJoinRequest(input) {
     return {
       ok: true,
       code: input ?? "",
-      ...validateCharacterConfiguration(undefined)
+      configuration: defaultCharacterConfiguration()
     };
   }
   if (typeof input !== "object" || Array.isArray(input) ||
       Object.keys(input).some(key =>
-        !["code", "characterId", "cosmetics"].includes(key))) {
+        !["code", "characterId", "variantId"].includes(key))) {
     return { ok: false, error: "Invalid join request." };
   }
 
-  const validated = validateCharacterConfiguration({
+  const configured = validateCharacterConfiguration({
     characterId: input.characterId ?? DEFAULT_CHARACTER_ID,
-    cosmetics: input.cosmetics
+    variantId: input.variantId
   });
-  return { ...validated, code: input.code ?? "" };
+  return { ...configured, code: input.code ?? "" };
 }
 
 module.exports = {
   DEFAULT_CHARACTER_ID,
+  defaultCharacterConfiguration,
   normalizeJoinRequest,
   validateCharacterConfiguration
 };

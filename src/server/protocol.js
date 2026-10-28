@@ -59,7 +59,7 @@ function serializeRoomState(room, playerIndex) {
       locked: player.locked,
       cooldown: player.cooldown,
       characterId: player.characterId,
-      cosmetics: { ...player.cosmetics }
+      variantId: player.variantId
     })),
     result: serializeResult(room.result),
     log: room.log.slice(),
