@@ -93,6 +93,27 @@
         <p id="match-status" class="match-status" role="status"></p>
       </header>
       <div id="player-identity" class="player-identity" aria-label="Player identities"></div>
+      <section id="map-vote-panel" class="map-stage" aria-labelledby="map-vote-title" hidden>
+        <div class="section-heading">
+          <span class="section-heading__index">03</span>
+          <div>
+            <h2 id="map-vote-title">Choose the battlefield</h2>
+            <p>Lock in one map. Your opponent's choice stays hidden.</p>
+          </div>
+        </div>
+        <p id="map-vote-status" class="map-vote-status" role="status"></p>
+        <div id="map-cards" class="map-grid" aria-label="Choose one map"></div>
+      </section>
+      <section id="map-reveal-panel" class="map-reveal" aria-labelledby="map-reveal-heading" hidden>
+        <p class="eyebrow">THE BATTLEFIELD IS SET</p>
+        <h2 id="map-reveal-heading">THE MAP REVEAL</h2>
+        <div id="map-reveal-votes" class="map-reveal-votes" aria-live="polite"></div>
+        <div class="map-reveal-card">
+          <canvas id="map-reveal-preview" width="320" height="180" aria-hidden="true"></canvas>
+          <h3 id="map-reveal-name"></h3>
+          <p id="map-reveal-description"></p>
+        </div>
+      </section>
       <div class="battle-frame">
         <canvas id="battlefield" width="480" height="270" aria-label="Pixel Duel battlefield"></canvas>
       </div>

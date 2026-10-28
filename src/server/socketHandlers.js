@@ -26,6 +26,10 @@ function registerSocketHandlers(io, roomManager) {
       acknowledge(reply, roomManager.configurePlayer(socket, configuration));
     });
 
+    socket.on(EVENTS.MAP_VOTE, (mapId, reply) => {
+      acknowledge(reply, roomManager.voteMap(socket, mapId));
+    });
+
     socket.on(EVENTS.MOVE, (move, reply) => {
       acknowledge(reply, roomManager.submitMove(socket, move));
     });

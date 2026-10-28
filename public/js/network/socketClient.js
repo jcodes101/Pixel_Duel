@@ -25,6 +25,10 @@ export function configureCharacter(configuration) {
   return emitWithAck("configure", configuration);
 }
 
+export function submitMapVote(mapId) {
+  return emitWithAck("mapVote", mapId);
+}
+
 export function submitMove(move) {
   socket.emit("move", move);
 }

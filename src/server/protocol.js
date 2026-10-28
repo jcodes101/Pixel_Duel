@@ -1,6 +1,7 @@
 const EVENTS = Object.freeze({
   JOIN: "join",
   CONFIGURE: "configure",
+  MAP_VOTE: "mapVote",
   MOVE: "move",
   REMATCH: "rematch",
   STATE: "state",
@@ -10,6 +11,8 @@ const EVENTS = Object.freeze({
 const MOVES = Object.freeze(["Attack", "Defend", "Heal", "Special"]);
 const PHASES = Object.freeze({
   WAITING: "WAITING",
+  MAP_VOTE: "MAP_VOTE",
+  MAP_REVEAL: "MAP_REVEAL",
   SELECT: "SELECT",
   RESOLVING: "RESOLVING",
   GAME_OVER: "GAME_OVER",
@@ -45,6 +48,11 @@ function serializeRoomState(room, playerIndex) {
     code: room.code,
     round: room.round,
     phase: room.phase,
+    mapId: room.mapId,
+    mapVoteLocks: room.mapVotes.map(vote => vote !== null),
+    mapReveal: room.phase !== PHASES.MAP_VOTE && room.mapReveal
+      ? { ...room.mapReveal, votes: room.mapReveal.votes.slice() }
+      : null,
     you: playerIndex,
     players: room.players.map(player => ({
       hp: player.hp,

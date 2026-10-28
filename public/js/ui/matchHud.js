@@ -3,18 +3,31 @@ import { getPlayerIdentityLabel } from "../game/assetLoader.mjs";
 
 const MOVES = ["Attack", "Defend", "Heal", "Special"];
 
-export function createMatchHud() {
+export function createMatchHud(mapVote) {
   const status = document.querySelector("#match-status");
+  const heading = document.querySelector("#match-heading");
   const roomLabel = document.querySelector("#match-room");
   const identity = document.querySelector("#player-identity");
   const moveButtons = document.querySelector("#match-moves");
   const rematchButton = document.querySelector("#match-rematch");
   const rematchStatus = document.querySelector("#match-rematch-status");
   const result = document.querySelector("#match-result");
+  const votePanel = document.querySelector("#map-vote-panel");
+  const revealPanel = document.querySelector("#map-reveal-panel");
+  const battleFrame = document.querySelector(".battle-frame");
 
   function render(state) {
     if (!state) return;
+    mapVote.render(state);
     roomLabel.textContent = `ROOM ${state.code} · ROUND ${state.round}`;
+    const mapName = state.maps.find(map => map.id === state.mapId)?.name;
+    heading.textContent = state.phase === "MAP_VOTE" ? "CHOOSE THE BATTLEFIELD"
+      : state.phase === "MAP_REVEAL" ? "THE MAP REVEAL"
+        : mapName || "THE ARENA";
+    votePanel.hidden = state.phase !== "MAP_VOTE";
+    revealPanel.hidden = state.phase !== "MAP_REVEAL";
+    battleFrame.hidden = state.phase === "MAP_VOTE" || state.phase === "MAP_REVEAL";
+    moveButtons.hidden = state.phase !== "SELECT";
     identity.replaceChildren();
     const localIndex = state.you;
     [localIndex, 1 - localIndex].forEach(index => {
@@ -35,8 +48,10 @@ export function createMatchHud() {
     const me = state.players[localIndex];
     const opponent = state.players[1 - localIndex];
     status.textContent = state.phase === "WAITING" ? "Waiting for your opponent to join..."
-      : state.phase === "RESOLVING" ? "Both moves revealed · Resolving..."
-        : state.phase === "GAME_OVER" ? "Duel complete · Rematch requires both players"
+      : state.phase === "MAP_VOTE" ? "Choose one map to reveal the battlefield."
+        : state.phase === "MAP_REVEAL" ? "Both votes are in · Revealing the chosen battlefield..."
+          : state.phase === "RESOLVING" ? "Both moves revealed · Resolving..."
+            : state.phase === "GAME_OVER" ? "Duel complete · Rematch requires both players"
           : me.locked ? "Your move is locked · Waiting for opponent"
             : opponent?.locked ? "Opponent is ready · Choose your move"
               : "Choose your move";

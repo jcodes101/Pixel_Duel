@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "maps": [
+    {
+      "id": "forgotten-grove",
+      "name": "Forgotten Grove",
+      "description": "Moss-covered ruins rest beneath the canopy of an enchanted forest.",
+      "environment": "grove",
+      "fallback": "procedural-canvas",
+      "palette": {
+        "sky": "#263d43",
+        "far": "#344d48",
+        "mid": "#46604d",
+        "ground": "#34453a",
+        "accent": "#a7bd76",
+        "light": "#e6d79a"
+      },
+      "layers": ["sunlit-canopy", "forest-silhouettes", "mossy-ruins", "mist"],
+      "effects": { "type": "leaves", "count": 16, "color": "#c4d883" },
+      "foreground": ["moss", "broken-stones"]
+    },
+    {
+      "id": "crimson-citadel",
+      "name": "Crimson Citadel",
+      "description": "A torchlit gothic courtyard beneath the walls of an ancient keep.",
+      "environment": "citadel",
+      "fallback": "procedural-canvas",
+      "palette": {
+        "sky": "#211c32",
+        "far": "#34263c",
+        "mid": "#50303c",
+        "ground": "#312b39",
+        "accent": "#c34f57",
+        "light": "#ffb36b"
+      },
+      "layers": ["castle-walls", "gothic-windows", "pillars", "braziers"],
+      "effects": { "type": "embers", "count": 22, "color": "#ff9c52" },
+      "foreground": ["stone-seams", "torch-glow"]
+    },
+    {
+      "id": "moonlit-shrine",
+      "name": "Moonlit Shrine",
+      "description": "A quiet shrine and lantern path beneath a luminous winter moon.",
+      "environment": "shrine",
+      "fallback": "procedural-canvas",
+      "palette": {
+        "sky": "#182943",
+        "far": "#293b5b",
+        "mid": "#495272",
+        "ground": "#34374f",
+        "accent": "#d68bad",
+        "light": "#e1e9ff"
+      },
+      "layers": ["moon-and-mountains", "shrine-roof", "blossom-trees", "lanterns"],
+      "effects": { "type": "petals", "count": 16, "color": "#f1b6d0" },
+      "foreground": ["stone-path", "lantern-glow"]
+    },
+    {
+      "id": "ember-forge",
+      "name": "Ember Forge",
+      "description": "A deep-earth foundry with glowing furnaces and flowing molten channels.",
+      "environment": "forge",
+      "fallback": "procedural-canvas",
+      "palette": {
+        "sky": "#241b23",
+        "far": "#3e2b30",
+        "mid": "#59352f",
+        "ground": "#30292c",
+        "accent": "#ed642f",
+        "light": "#ffc15b"
+      },
+      "layers": ["cavern-rock", "furnaces", "chains", "lava-channels"],
+      "effects": { "type": "sparks", "count": 20, "color": "#ffc25b" },
+      "foreground": ["dark-platform", "heat-shimmer"]
+    },
+    {
+      "id": "skybound-sanctuary",
+      "name": "Skybound Sanctuary",
+      "description": "Floating temple ruins rise above a sea of clouds and distant falls.",
+      "environment": "sky",
+      "fallback": "procedural-canvas",
+      "palette": {
+        "sky": "#8bb5ce",
+        "far": "#739bb9",
+        "mid": "#597e9e",
+        "ground": "#485a70",
+        "accent": "#d6c58e",
+        "light": "#f4e9bb"
+      },
+      "layers": ["open-sky", "cloud-banks", "floating-islands", "waterfalls"],
+      "effects": { "type": "cloud-dust", "count": 18, "color": "#e2f2f4" },
+      "foreground": ["ruin-platform", "waterfall-glow"]
+    }
+  ]
+}

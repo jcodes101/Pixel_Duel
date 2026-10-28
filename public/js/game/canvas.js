@@ -1,32 +1,12 @@
 import { drawCharacterArt } from "./characterPreview.mjs";
+import { getMapById } from "./maps.js";
+import { createMapRenderer } from "./mapRenderer.js";
 
 const COLORS = {
-  background: "#171725",
-  far: "#222438",
-  ground: "#394052",
   gold: "#f0ca7a",
   p1: "#68c5bc",
   p2: "#e78378"
 };
-
-function drawBackground(context, time, width, height) {
-  context.fillStyle = COLORS.background;
-  context.fillRect(0, 0, width, height);
-  for (let i = 0; i < 36; i++) {
-    const x = (i * 73 + Math.floor(time * (i % 3 + 1))) % width;
-    const y = (i * 41) % 158;
-    context.fillStyle = i % 4 === 0 ? "#807ba0" : COLORS.far;
-    context.fillRect(x, y, i % 5 === 0 ? 3 : 2, i % 5 === 0 ? 3 : 2);
-  }
-  context.fillStyle = "#242b3a";
-  context.fillRect(0, 170, width, height - 170);
-  context.fillStyle = COLORS.ground;
-  context.fillRect(0, 169, width, 3);
-  for (let i = 0; i < 18; i++) {
-    context.fillStyle = i % 2 ? "#242b3a" : "#303849";
-    context.fillRect(i * 29, 206 + (i % 3) * 13, 18, 4);
-  }
-}
 
 function drawHealth(context, player, playerIndex, x, state, time) {
   const accent = playerIndex === 0 ? COLORS.p1 : COLORS.p2;
@@ -67,47 +47,52 @@ function drawHealth(context, player, playerIndex, x, state, time) {
 
 export function createBattleCanvas(canvas, getState) {
   const context = canvas.getContext("2d");
+  const mapRenderer = createMapRenderer(context);
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
   let previousTime = 0;
   let elapsed = 0;
   let running = true;
 
   function draw(timestamp) {
-    if (!running || document.hidden) {
-      frame = 0;
-      return;
-    }
-    if (previousTime) elapsed += Math.min(64, timestamp - previousTime) / 1000;
+    frame = 0;
+    if (!running || document.hidden) return;
+    const state = getState();
+    if (!state || !["WAITING", "SELECT", "RESOLVING", "GAME_OVER"].includes(state.phase)) return;
+    const delta = previousTime ? Math.min(64, timestamp - previousTime) / 1000 : 0;
+    elapsed += delta;
     previousTime = timestamp;
     context.imageSmoothingEnabled = false;
-    drawBackground(context, elapsed, canvas.width, canvas.height);
-    const state = getState();
-    if (state) {
-      const renderState = { ...state, manifest: state.manifest };
-      state.players.forEach((player, index) => drawHealth(context, player, index,
-        index === 0 ? 46 : 326, renderState, elapsed));
-      if (state.phase === "WAITING" && state.players.length < 2) {
-        context.fillStyle = "#c8c0ae";
-        context.font = "12px monospace";
-        context.textAlign = "center";
-        context.fillText("Waiting for another challenger...", 240, 108);
-      }
-    }
+    mapRenderer.draw(getMapById(state.maps, state.mapId), elapsed, delta,
+      reducedMotion.matches);
+    state.players.forEach((player, index) => drawHealth(context, player, index,
+      index === 0 ? 46 : 326, state, elapsed));
     frame = requestAnimationFrame(draw);
   }
 
-  function onVisibilityChange() {
-    if (!document.hidden && running && !frame) {
+  function scheduleFrame() {
+    const state = getState();
+    if (running && !document.hidden && state &&
+        ["WAITING", "SELECT", "RESOLVING", "GAME_OVER"].includes(state.phase) && !frame) {
       previousTime = 0;
       frame = requestAnimationFrame(draw);
     }
   }
 
+  function onVisibilityChange() {
+    if (document.hidden && frame) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    } else scheduleFrame();
+  }
+
   document.addEventListener("visibilitychange", onVisibilityChange);
-  frame = requestAnimationFrame(draw);
-  return () => {
+  const stop = () => {
     running = false;
-    cancelAnimationFrame(frame);
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
     document.removeEventListener("visibilitychange", onVisibilityChange);
   };
+  stop.stateChanged = scheduleFrame;
+  return stop;
 }

@@ -1,14 +1,17 @@
 import { loadCharacterManifest } from "./game/assetLoader.mjs";
 import { createBattleCanvas } from "./game/canvas.js";
+import { loadMapManifest } from "./game/maps.js";
 import {
   joinRoom,
   onConnectionChange,
   onOpponentLeft,
-  onState
+  onState,
+  submitMapVote
 } from "./network/socketClient.js";
 import { createCharacterSelect } from "./ui/characterSelect.js";
 import { createLobby } from "./ui/lobby.js";
 import { createMatchHud } from "./ui/matchHud.js";
+import { createMapVote } from "./ui/mapVote.js";
 
 const menuScreen = document.querySelector("#menu-screen");
 const matchScreen = document.querySelector("#match-screen");
@@ -34,9 +37,13 @@ function showMatch() {
 }
 
 async function initialize() {
-  const manifest = await loadCharacterManifest();
+  const [manifest, maps] = await Promise.all([
+    loadCharacterManifest(),
+    loadMapManifest()
+  ]);
   characterSelect = createCharacterSelect(manifest);
-  matchHud = createMatchHud();
+  const mapVote = createMapVote(maps, submitMapVote);
+  matchHud = createMatchHud(mapVote);
   const stopBattleCanvas = createBattleCanvas(
     document.querySelector("#battlefield"),
     () => gameState
@@ -49,8 +56,9 @@ async function initialize() {
   });
 
   onState(snapshot => {
-    gameState = { ...snapshot, manifest };
+    gameState = { ...snapshot, manifest, maps };
     matchHud.render(gameState);
+    stopBattleCanvas.stateChanged();
     if (snapshot.phase === "WAITING") {
       lobby.setStatus(`Room ${snapshot.code} · Waiting for a challenger`, "waiting");
     }
@@ -73,8 +81,8 @@ async function initialize() {
 }
 
 initialize().catch(error => {
-  console.error("Pixel Duel could not load its character data.", error);
+  console.error("Pixel Duel could not load its game data.", error);
   document.querySelector("#startup-error").textContent =
-    "The character roster could not be loaded. Refresh to try again.";
+    "Game data could not be loaded. Refresh to try again.";
   document.querySelector("#startup-error").hidden = false;
 });
