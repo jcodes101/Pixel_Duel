@@ -3,12 +3,12 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
+const { canUseMove, getWinner, resolveCombat } = require("./src/server/combat");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const rooms = new Map();
-const MOVES = ["Attack", "Defend", "Heal", "Special"];
 
 app.get("/", (_, res) => res.sendFile(path.join(__dirname, "index.html")));
 
@@ -53,42 +53,17 @@ function publish(room, result = null) {
 
 function resolve(room) {
   room.phase = "RESOLVING";
-  const [a, b] = room.players;
-  const moves = [a.move, b.move];
-  const damage = [0, 0];
-  const heal = [0, 0];
+  const result = resolveCombat(room.players);
 
-  for (let i = 0; i < 2; i++) {
-    const me = room.players[i], other = room.players[1 - i];
-    if (me.move === "Heal") heal[i] = Math.min(10, 100 - me.hp);
-    if (me.move === "Attack")
-      damage[1 - i] += other.move === "Defend" ? 5 : 15;
-    if (me.move === "Special") damage[1 - i] += 30;
-  }
-
-  // Variance applies to positive damage only.
-  for (let i = 0; i < 2; i++) {
-    if (damage[i]) damage[i] = Math.max(1, damage[i] + Math.floor(Math.random() * 7) - 3);
-    room.players[i].hp = Math.max(0,
-      Math.min(100, room.players[i].hp + heal[i]) - damage[i]);
-  }
-
-  for (const p of room.players) {
-    if (p.move === "Special") p.cooldown = 3;
-    else p.cooldown = Math.max(0, p.cooldown - 1);
-  }
-
-  const outcome = `P1 ${moves[0]} / P2 ${moves[1]} | Damage: ${damage[0]}, ${damage[1]} | Heal: ${heal[0]}, ${heal[1]}`;
-  room.log.push(`Round ${room.round}: ${outcome}`);
-  const result = { moves, damage, heal, outcome };
-
+  room.log.push(`Round ${room.round}: ${result.outcome}`);
   publish(room, result);
 
   setTimeout(() => {
     if (rooms.get(room.code) !== room || room.phase !== "RESOLVING") return;
-    if (a.hp <= 0 || b.hp <= 0) {
+    const winner = getWinner(room.players);
+    if (winner !== null) {
       room.phase = "GAME_OVER";
-      result.winner = a.hp <= 0 && b.hp <= 0 ? -1 : a.hp > 0 ? 0 : 1;
+      result.winner = winner;
     } else {
       room.round++;
       room.phase = "SELECT";
@@ -127,9 +102,9 @@ io.on("connection", socket => {
 
   socket.on("move", move => {
     const room = rooms.get(socket.data.room);
-    if (!room || room.phase !== "SELECT" || !MOVES.includes(move)) return;
+    if (!room || room.phase !== "SELECT") return;
     const p = room.players.find(p => p.id === socket.id);
-    if (!p || p.locked || (move === "Special" && p.cooldown > 0)) return;
+    if (!p || p.locked || !canUseMove(p, move)) return;
     p.move = move;
     p.locked = true;
     publish(room);
