@@ -29,6 +29,7 @@ export function createMapVote(maps, submitVote) {
     button.className = "map-card";
     button.dataset.mapId = map.id;
     button.setAttribute("aria-label", `Vote for ${map.name}`);
+    button.setAttribute("aria-pressed", "false");
 
     const preview = document.createElement("canvas");
     preview.className = "map-card__preview";
@@ -75,6 +76,7 @@ export function createMapVote(maps, submitVote) {
       buttons.forEach(({ button, locked }) => {
         button.disabled = myVoteLocked || submitting;
         const selected = myVoteLocked && localVote === button.dataset.mapId;
+      button.setAttribute("aria-pressed", String(selected));
         locked.textContent = selected ? `${yourLabel} · LOCKED` : "";
         button.classList.toggle("map-card--locked", myVoteLocked);
         button.classList.toggle("map-card--selected", selected);
@@ -96,5 +98,21 @@ export function createMapVote(maps, submitVote) {
       createPreview(revealPreview, selectedMap, 320, 180);
   }
 
-  return { render };
+  function reset() {
+    submitting = false;
+    localVote = null;
+    latestState = null;
+    voteStatus.textContent = "";
+    revealVotes.replaceChildren();
+    revealName.textContent = "";
+    revealDescription.textContent = "";
+    buttons.forEach(({ button, locked }) => {
+      button.disabled = false;
+      button.setAttribute("aria-pressed", "false");
+      button.classList.remove("map-card--locked", "map-card--selected");
+      locked.textContent = "";
+    });
+  }
+
+  return { render, reset };
 }

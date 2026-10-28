@@ -1,54 +1,14 @@
-const socket = window.io();
+import { createSocketSession } from "./socketSession.mjs";
 
-function emitWithAck(event, payload) {
-  return new Promise((resolve, reject) => {
-    if (!socket.connected) {
-      reject(new Error("Not connected to the game server."));
-      return;
-    }
-    socket.emit(event, payload, response => {
-      if (response?.error) reject(new Error(response.error));
-      else resolve(response);
-    });
-  });
-}
+const session = createSocketSession(window.io());
 
-export function joinRoom(code, configuration) {
-  return emitWithAck("join", {
-    code,
-    characterId: configuration.characterId,
-    variantId: configuration.variantId
-  });
-}
-
-export function configureCharacter(configuration) {
-  return emitWithAck("configure", configuration);
-}
-
-export function submitMapVote(mapId) {
-  return emitWithAck("mapVote", mapId);
-}
-
-export function submitMove(move) {
-  socket.emit("move", move);
-}
-
-export function requestRematch() {
-  socket.emit("rematch");
-}
-
-export function onState(callback) {
-  socket.on("state", callback);
-  return () => socket.off("state", callback);
-}
-
-export function onOpponentLeft(callback) {
-  socket.on("opponentLeft", callback);
-  return () => socket.off("opponentLeft", callback);
-}
-
-export function onConnectionChange(callback) {
-  callback(socket.connected);
-  socket.on("connect", () => callback(true));
-  socket.on("disconnect", () => callback(false));
-}
+export const joinRoom = (...args) => session.joinRoom(...args);
+export const configureCharacter = (...args) => session.configureCharacter(...args);
+export const submitMapVote = (...args) => session.submitMapVote(...args);
+export const submitMove = (...args) => session.submitMove(...args);
+export const requestRematch = (...args) => session.requestRematch(...args);
+export const leaveRoom = (...args) => session.leaveRoom(...args);
+export const onState = (...args) => session.onState(...args);
+export const onOpponentLeft = (...args) => session.onOpponentLeft(...args);
+export const onConnectionChange = (...args) => session.onConnectionChange(...args);
+export const onRoomInterrupted = (...args) => session.onRoomInterrupted(...args);

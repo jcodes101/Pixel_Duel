@@ -152,6 +152,27 @@ function createRoomManager(options = {}) {
     return true;
   }
 
+  function closeRoomForPlayer(socket) {
+    const code = socket.data.room;
+    const room = rooms.get(code);
+    joinAttempts.delete(socket.id);
+    socket.data.room = null;
+    if (!room) return null;
+
+    const opponent = room.players.find(player => player.id !== socket.id);
+    rooms.delete(code);
+    room.phase = PHASES.CLOSED;
+    room.resolutionToken++;
+    room.mapRevealToken++;
+    if (room.resolutionTimer !== null) cancel(room.resolutionTimer);
+    if (room.mapRevealTimer !== null) cancel(room.mapRevealTimer);
+    room.resolutionTimer = null;
+    room.mapRevealTimer = null;
+
+    if (opponent) emitToSocket(opponent.id, EVENTS.OPPONENT_LEFT, { code, reason: "player-left" });
+    return { code, opponentId: opponent && opponent.id };
+  }
+
   return {
     rooms,
 
@@ -261,6 +282,9 @@ function createRoomManager(options = {}) {
       if (!room.players.some(player => player.id === socket.id)) {
         return { error: "You are not a player in this room." };
       }
+      if (room.rematches.has(socket.id)) {
+        return { error: "Rematch vote already submitted." };
+      }
 
       room.rematches.add(socket.id);
       if (room.rematches.size === 2) reset(room);
@@ -268,25 +292,12 @@ function createRoomManager(options = {}) {
       return { ok: true };
     },
 
+    leave(socket) {
+      return closeRoomForPlayer(socket);
+    },
+
     disconnect(socket) {
-      const code = socket.data.room;
-      const room = rooms.get(code);
-      joinAttempts.delete(socket.id);
-      socket.data.room = null;
-      if (!room) return null;
-
-      const opponent = room.players.find(player => player.id !== socket.id);
-      rooms.delete(code);
-      room.phase = PHASES.CLOSED;
-      room.resolutionToken++;
-      room.mapRevealToken++;
-      if (room.resolutionTimer !== null) cancel(room.resolutionTimer);
-      if (room.mapRevealTimer !== null) cancel(room.mapRevealTimer);
-      room.resolutionTimer = null;
-      room.mapRevealTimer = null;
-
-      if (opponent) emitToSocket(opponent.id, EVENTS.OPPONENT_LEFT);
-      return { code, opponentId: opponent && opponent.id };
+      return closeRoomForPlayer(socket);
     },
 
     hasRoom(code) {

@@ -6,12 +6,15 @@ import { createBattleCanvas } from "./game/canvas.js";
 import { loadMapManifest } from "./game/maps.mjs";
 import {
   joinRoom,
+  leaveRoom,
   onConnectionChange,
   onOpponentLeft,
+  onRoomInterrupted,
   onState,
   submitMapVote
 } from "./network/socketClient.js";
 import { createCharacterSelect } from "./ui/characterSelect.js";
+import { createGameMenu } from "./ui/gameMenu.js";
 import { createLobby } from "./ui/lobby.js";
 import { createMatchHud } from "./ui/matchHud.js";
 import { createMapVote } from "./ui/mapVote.js";
@@ -19,24 +22,50 @@ import { createMapVote } from "./ui/mapVote.js";
 const menuScreen = document.querySelector("#menu-screen");
 const matchScreen = document.querySelector("#match-screen");
 const menuError = document.querySelector("#menu-error");
+const connectionStatus = document.querySelector("#connection-status");
 let gameState = null;
 let characterSelect;
 let lobby;
 let matchHud;
+let gameMenu;
+let stopBattleCanvas;
+
+function setConnectionStatus(state) {
+  const labels = {
+    connecting: "Connecting to the arena...",
+    connected: "Connected · ready to duel",
+    reconnecting: "Connection interrupted · reconnecting...",
+    disconnected: "Disconnected from the arena."
+  };
+  if (connectionStatus) {
+    connectionStatus.textContent = labels[state] || labels.disconnected;
+    connectionStatus.dataset.state = state;
+  }
+  matchHud?.setConnectionState(state);
+}
 
 function showMenu(message = "") {
+  gameMenu?.close();
+  gameState = null;
+  matchHud?.reset();
+  stopBattleCanvas?.stateChanged();
   matchScreen.hidden = true;
   menuScreen.hidden = false;
-  if (message) {
-    menuError.textContent = message;
-    lobby?.setStatus(message, "error");
-  }
+  menuError.textContent = message;
+  lobby?.setStatus(message, message ? "notice" : "neutral");
   lobby?.setBusy(false);
 }
 
 function showMatch() {
+  menuError.textContent = "";
   menuScreen.hidden = true;
   matchScreen.hidden = false;
+  lobby?.setBusy(false);
+}
+
+async function leaveCurrentRoom(message = "You left the room.") {
+  await leaveRoom();
+  showMenu(message);
 }
 
 async function initialize() {
@@ -46,8 +75,11 @@ async function initialize() {
   ]);
   characterSelect = createCharacterSelect(manifest);
   const mapVote = createMapVote(maps, submitMapVote);
-  matchHud = createMatchHud(mapVote);
-  const stopBattleCanvas = createBattleCanvas(
+  matchHud = createMatchHud(mapVote, {
+    onReturnToMenu: () => leaveCurrentRoom("You left the duel. Your character preferences are saved.")
+  });
+  gameMenu = createGameMenu(() => leaveCurrentRoom("You left the duel. Your character preferences are saved."));
+  stopBattleCanvas = createBattleCanvas(
     document.querySelector("#battlefield"),
     () => gameState
   );
@@ -67,25 +99,18 @@ async function initialize() {
     });
     matchHud.render(gameState);
     stopBattleCanvas.stateChanged();
-    if (snapshot.phase === "WAITING") {
-      lobby.setStatus(`Room ${snapshot.code} · Waiting for a challenger`, "waiting");
-    }
     if (!matchScreen.hidden) showMatch();
   });
 
   onOpponentLeft(() => {
-    gameState = null;
     showMenu("Your opponent left the room. You can create or join another duel.");
   });
 
-  onConnectionChange(connected => {
-    if (connected && !menuScreen.hidden) {
-      lobby.setStatus("Connected · ready to duel", "connected");
-    } else if (!connected && !matchScreen.hidden) {
-      gameState = null;
-      showMenu("Connection lost. Reconnect and join a room to continue.");
-    }
+  onRoomInterrupted(() => {
+    showMenu("The connection interrupted this match. Rejoin by creating or joining a room.");
   });
+
+  onConnectionChange(setConnectionStatus);
 }
 
 initialize().catch(error => {

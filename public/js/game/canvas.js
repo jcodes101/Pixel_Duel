@@ -7,11 +7,7 @@ import { resolveAnimation } from "./assetLoader.mjs";
 import { getMapById } from "./maps.mjs";
 import { createMapRenderer, getFighterSafeAreas } from "./mapRenderer.js";
 
-const COLORS = {
-  gold: "#f0ca7a",
-  p1: "#68c5bc",
-  p2: "#e78378"
-};
+const COLORS = { gold: "#f0ca7a" };
 
 const PLAYER_X = [132, 348];
 const HIT_DELAY_MS = 420;
@@ -107,37 +103,27 @@ function createPlayback() {
   return { observe, forPlayer };
 }
 
-function drawHud(context, state, index, player, time) {
-  const accent = index === 0 ? COLORS.p1 : COLORS.p2;
-  const x = index === 0 ? 46 : 326;
-  const label = index === state.you ? `P${index + 1} (You)` :
-    `P${index + 1} (Opponent)`;
-  context.fillStyle = accent;
-  context.font = "bold 12px monospace";
-  context.textAlign = "left";
-  context.fillText(label, x, 26);
-  context.fillStyle = "#302e42";
-  context.fillRect(x, 36, 132, 11);
-  context.fillStyle = accent;
-  context.fillRect(x + 2, 38, 128 * Math.max(0, player.hp) / 100, 7);
-  context.fillStyle = "#eee7d2";
-  context.font = "10px monospace";
-  context.fillText(`${player.hp} HP`, x, 61);
-
-  if (state.phase === "RESOLVING" && state.result) {
-    const damage = state.result.damage[index];
-    const heal = state.result.heal[index];
-    const numberY = 98 + Math.sin(time * 8) * 3;
-    context.font = "bold 13px monospace";
-    if (damage > 0) {
-      context.fillStyle = COLORS.gold;
-      context.fillText(`-${damage}`, PLAYER_X[index] + 17, numberY);
-    }
-    if (heal > 0) {
-      context.fillStyle = "#9de391";
-      context.fillText(`+${heal}`, PLAYER_X[index] + 17, numberY - 12);
-    }
+function drawCombatFeedback(context, state, index, time) {
+  if (state.phase !== "RESOLVING" || !state.result) return;
+  const damage = state.result.damage[index];
+  const heal = state.result.heal[index];
+  const numberY = 99 + Math.sin(time * 8) * 2;
+  context.save();
+  context.font = '9px "Pixelify Sans", monospace';
+  context.textAlign = "center";
+  context.lineWidth = 2;
+  context.strokeStyle = "#171522";
+  if (damage > 0) {
+    context.fillStyle = COLORS.gold;
+    context.strokeText(`-${damage}`, PLAYER_X[index], numberY);
+    context.fillText(`-${damage}`, PLAYER_X[index], numberY);
   }
+  if (heal > 0) {
+    context.fillStyle = "#9de391";
+    context.strokeText(`+${heal}`, PLAYER_X[index], numberY - 12);
+    context.fillText(`+${heal}`, PLAYER_X[index], numberY - 12);
+  }
+  context.restore();
 }
 
 function actorLunge(action, elapsedMs, facing, reducedMotion) {
@@ -168,7 +154,7 @@ export function createBattleCanvas(canvas, getState) {
     const map = getMapById(state.maps, state.mapId);
     const floorY = mapRenderer.drawBackground(map, elapsed, delta, reducedMotion.matches);
 
-    state.players.forEach((player, index) => {
+    const actors = state.players.map((player, index) => {
       const character = getCharacter(state.manifest, player);
       const actor = playback.forPlayer(index, character, player, state.phase, timestamp);
       const facing = index === 0 ? 1 : -1;
@@ -183,10 +169,13 @@ export function createBattleCanvas(canvas, getState) {
         baseline: floorY,
         shouldFaceRight: index === 0
       });
-
       const variant = getVariant(character, player);
       const defendFallback = actor.action === "defend" &&
         resolveAnimation(variant, "defend", true)?.animationId === "idle";
+      return { character, player, actor, facing, centerX, defendFallback, index };
+    });
+
+    actors.forEach(({ character, player, actor, facing, centerX, defendFallback }) => {
       drawMoveEffect(context, {
         action: actor.action,
         characterId: character.id,
@@ -201,7 +190,7 @@ export function createBattleCanvas(canvas, getState) {
     });
 
     mapRenderer.drawForeground(map, 0, getFighterSafeAreas(floorY));
-    state.players.forEach((player, index) => drawHud(context, state, index, player, elapsed));
+    state.players.forEach((player, index) => drawCombatFeedback(context, state, index, elapsed));
     frame = requestAnimationFrame(draw);
   }
 

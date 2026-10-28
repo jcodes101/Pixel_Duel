@@ -85,8 +85,23 @@ async function createFixture(t, options = {}) {
     await new Promise(resolve => game.io.close(resolve));
   });
 
-  return { game, connect };
+  return { game, connect, url };
 }
+
+test("health endpoint and static game assets are available from the same server", async t => {
+  const { url } = await createFixture(t);
+  const [health, home, font] = await Promise.all([
+    fetch(`${url}/healthz`),
+    fetch(`${url}/`),
+    fetch(`${url}/assets/fonts/PixelifySans-Variable.ttf`)
+  ]);
+  assert.equal(health.status, 200);
+  assert.deepEqual(await health.json(), { status: "ok" });
+  assert.equal(home.status, 200);
+  assert.match(await home.text(), /Pixel Duel/);
+  assert.equal(font.status, 200);
+  assert.match(font.headers.get("content-type"), /font|octet-stream/i);
+});
 
 async function join(socket, code) {
   return emitWithAck(socket, "join", code);
@@ -515,6 +530,7 @@ test("game-over result survives one rematch vote and both votes reset the duel",
   assert.equal(votedSecond.result.winner, -1);
   assert.equal(votedFirst.youRematchReady, true);
   assert.equal(votedSecond.youRematchReady, false);
+  assert.match((await emitWithAck(first, "rematch")).error, /already submitted/i);
 
   const resetFirst = waitForEvent(first, "state", state => state.phase === "SELECT");
   const resetSecond = waitForEvent(second, "state", state => state.phase === "SELECT");
@@ -565,4 +581,63 @@ test("disconnect removes the room and stale resolution timers cannot publish", a
   scheduled[0].callback();
   assert.equal(stateCount, 0);
   assert.deepEqual(await join(second, "NEXT"), { code: "NEXT" });
+});
+
+test("explicit leave closes the room, notifies the opponent, and invalidates resolution timers", async t => {
+  const scheduled = [];
+  const { connect, game } = await createFixture(t, {
+    roomManagerOptions: {
+      resolutionDelayMs: 25,
+      schedule(callback, delay) {
+        if (delay !== 25) {
+          callback();
+          return scheduled.length + 1;
+        }
+        scheduled.push({ callback, delay });
+        return scheduled.length;
+      },
+      cancel() {}
+    }
+  });
+  const first = await connect();
+  const second = await connect();
+  const created = await join(first, "LEAV");
+  await joinAndStartMatch(first, second, created.code);
+  await emitWithAck(first, "move", "Attack");
+  await emitWithAck(second, "move", "Defend");
+  assert.equal(scheduled.length, 1);
+
+  const opponentLeft = waitForEvent(second, "opponentLeft");
+  assert.deepEqual(await emitWithAck(first, "leave"), { ok: true });
+  await opponentLeft;
+  assert.equal(game.roomManager.hasRoom(created.code), false);
+  assert.equal(game.roomManager.rooms.get(created.code), undefined);
+
+  let staleStates = 0;
+  second.on("state", () => { staleStates++; });
+  scheduled[0].callback();
+  assert.equal(staleStates, 0);
+  assert.deepEqual(await join(second, "NEXT"), { code: "NEXT" });
+  assert.deepEqual(await join(first, "NEWA"), { code: "NEWA" });
+});
+
+test("leaving after game over never counts as a rematch vote", async t => {
+  const { connect, game } = await createFixture(t);
+  const first = await connect();
+  const second = await connect();
+  const created = await join(first, "GONE");
+  await joinAndStartMatch(first, second, created.code);
+  const room = game.roomManager.rooms.get(created.code);
+  room.players.forEach(player => { player.hp = 1; });
+  const firstOver = waitForEvent(first, "state", state => state.phase === "GAME_OVER");
+  const secondOver = waitForEvent(second, "state", state => state.phase === "GAME_OVER");
+  await emitWithAck(first, "move", "Attack");
+  await emitWithAck(second, "move", "Attack");
+  await Promise.all([firstOver, secondOver]);
+
+  const opponentLeft = waitForEvent(second, "opponentLeft");
+  assert.deepEqual(await emitWithAck(first, "leave"), { ok: true });
+  await opponentLeft;
+  assert.equal(room.rematches.size, 0);
+  assert.equal(game.roomManager.hasRoom(created.code), false);
 });

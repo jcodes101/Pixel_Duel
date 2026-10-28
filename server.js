@@ -14,6 +14,9 @@ function createGameServer(options = {}) {
     emitToSocket: (socketId, event, payload) => io.to(socketId).emit(event, payload)
   });
 
+  app.get("/healthz", (request, response) => {
+    response.status(200).json({ status: "ok" });
+  });
   app.use(express.static(path.join(__dirname, "public")));
   registerSocketHandlers(io, roomManager);
 

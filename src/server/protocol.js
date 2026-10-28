@@ -4,6 +4,7 @@ const EVENTS = Object.freeze({
   MAP_VOTE: "mapVote",
   MOVE: "move",
   REMATCH: "rematch",
+  LEAVE: "leave",
   STATE: "state",
   OPPONENT_LEFT: "opponentLeft"
 });

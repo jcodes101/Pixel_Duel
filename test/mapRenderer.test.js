@@ -87,3 +87,10 @@ test("all five maps keep their artwork or procedural fallback and floor", async 
     assert.deepEqual(context.draws, []);
   }
 });
+
+test("map-vote previews include all five downloaded artwork layers", async () => {
+  const { drawMap } = await import("../public/js/game/mapRenderer.js");
+  const context = createContext();
+  drawMap(context, loadMapArtwork(manifest.maps[0]), 0, 0, null, true);
+  assert.deepEqual(context.draws, [0, 1, 2, 3, 4, 4]);
+});

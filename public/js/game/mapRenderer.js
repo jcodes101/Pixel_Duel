@@ -238,6 +238,8 @@ export function drawMap(context, map, time = 0, delta = 0, system = null, reduce
   if (isUsableMapArtwork(safeMap)) {
     drawArtworkLayers(context, safeMap, 0, 4);
     updateAndDrawParticles(context, system, delta, time, reducedMotion);
+    // Previews have no fighter lane, so show the complete decorative depth layer.
+    drawParallaxLayer(context, safeMap.artwork.layers[4]);
   } else {
     drawProceduralMap(context, safeMap, time, delta, system, reducedMotion);
   }

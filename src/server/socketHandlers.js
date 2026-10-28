@@ -38,6 +38,21 @@ function registerSocketHandlers(io, roomManager) {
       acknowledge(findAcknowledgement(args), roomManager.requestRematch(socket));
     });
 
+    socket.on(EVENTS.LEAVE, reply => {
+      const result = roomManager.leave(socket);
+      if (!result) {
+        acknowledge(reply, { ok: true });
+        return;
+      }
+      socket.leave(result.code);
+      const opponent = result.opponentId && io.sockets.sockets.get(result.opponentId);
+      if (opponent) {
+        opponent.leave(result.code);
+        opponent.data.room = null;
+      }
+      acknowledge(reply, { ok: true });
+    });
+
     socket.on("disconnect", () => {
       const result = roomManager.disconnect(socket);
       if (!result || !result.opponentId) return;

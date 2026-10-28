@@ -1,7 +1,7 @@
 export function createLobby(onJoin) {
   const roomCode = document.querySelector("#room-code");
   const error = document.querySelector("#menu-error");
-  const status = document.querySelector("#connection-status");
+  const status = document.querySelector("#lobby-status");
   const createButton = document.querySelector("#create-room");
   const joinButton = document.querySelector("#join-room");
   let busy = false;
