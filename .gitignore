@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*
+*.tmp
+.tmp/
+tmp/
+temp/
+coverage/
+dist/
+build/
