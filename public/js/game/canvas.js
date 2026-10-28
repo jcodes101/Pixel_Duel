@@ -5,7 +5,7 @@ import {
 } from "./characterPreview.mjs";
 import { resolveAnimation } from "./assetLoader.mjs";
 import { getMapById } from "./maps.mjs";
-import { createMapRenderer } from "./mapRenderer.js";
+import { createMapRenderer, getFighterSafeAreas } from "./mapRenderer.js";
 
 const COLORS = {
   gold: "#f0ca7a",
@@ -200,7 +200,7 @@ export function createBattleCanvas(canvas, getState) {
       });
     });
 
-    mapRenderer.drawForeground(map);
+    mapRenderer.drawForeground(map, 0, getFighterSafeAreas(floorY));
     state.players.forEach((player, index) => drawHud(context, state, index, player, elapsed));
     frame = requestAnimationFrame(draw);
   }

@@ -4,6 +4,9 @@ import { isUsableMapArtwork } from "./maps.mjs";
 const WIDTH = 480;
 const HEIGHT = 270;
 const FLOOR = 211;
+const FIGHTER_SAFE_RADIUS_X = 76;
+const FIGHTER_SAFE_ABOVE_FEET = 106;
+const FIGHTER_SAFE_BELOW_FEET = 2;
 const FALLBACK_MAP = {
   environment: "grove",
   palette: { sky: "#263d43", far: "#344d48", mid: "#46604d", ground: "#34453a", accent: "#a7bd76", light: "#e6d79a" },
@@ -216,12 +219,25 @@ function drawArtworkLayers(context, map, firstLayer, lastLayer, cameraX = 0) {
   }
 }
 
+export function getFighterSafeAreas(floorY, centers = [132, 348]) {
+  return centers.map(centerX => ({
+    x: centerX - FIGHTER_SAFE_RADIUS_X,
+    y: floorY - FIGHTER_SAFE_ABOVE_FEET,
+    width: FIGHTER_SAFE_RADIUS_X * 2,
+    height: FIGHTER_SAFE_ABOVE_FEET + FIGHTER_SAFE_BELOW_FEET
+  }));
+}
+
+export function isPointInFighterSafeArea(x, y, safeAreas) {
+  return safeAreas.some(area => x >= area.x && x < area.x + area.width &&
+    y >= area.y && y < area.y + area.height);
+}
+
 export function drawMap(context, map, time = 0, delta = 0, system = null, reducedMotion = false) {
   const safeMap = map?.fallback === "procedural-canvas" ? map : FALLBACK_MAP;
   if (isUsableMapArtwork(safeMap)) {
-    drawArtworkLayers(context, safeMap, 0, 3);
+    drawArtworkLayers(context, safeMap, 0, 4);
     updateAndDrawParticles(context, system, delta, time, reducedMotion);
-    drawParallaxLayer(context, safeMap.artwork.layers[4]);
   } else {
     drawProceduralMap(context, safeMap, time, delta, system, reducedMotion);
   }
@@ -245,14 +261,29 @@ export function createMapRenderer(context) {
         drawProceduralMap(context, map, time, delta, particleSystem, reducedMotion);
         return FLOOR;
       }
-      drawArtworkLayers(context, map, 0, 3, reducedMotion ? 0 : cameraX);
+      // The full fifth layer belongs behind the fighters. It may contain large
+      // foreground silhouettes and must not be composited over the sprite lane.
+      drawArtworkLayers(context, map, 0, 4, reducedMotion ? 0 : cameraX);
       updateAndDrawParticles(context, particleSystem, delta, time, reducedMotion);
       return map.artwork.floorY;
     },
 
-    drawForeground(map, cameraX = 0) {
+    drawForeground(map, cameraX = 0, fighterSafeAreas = []) {
       if (isUsableMapArtwork(map)) {
-        drawParallaxLayer(context, map.artwork.layers[4], cameraX);
+        if (fighterSafeAreas.length) {
+          // The fifth artwork layer is still redrawn in front for depth, with
+          // even-odd holes around both complete fighter/action bounds.
+          context.save();
+          context.beginPath();
+          context.rect(0, 0, WIDTH, HEIGHT);
+          fighterSafeAreas.forEach(area =>
+            context.rect(area.x, area.y, area.width, area.height));
+          context.clip("evenodd");
+          drawParallaxLayer(context, map.artwork.layers[4], cameraX);
+          context.restore();
+        } else {
+          drawParallaxLayer(context, map.artwork.layers[4], cameraX);
+        }
       }
     },
 

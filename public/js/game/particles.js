@@ -1,4 +1,5 @@
-const MOTION = window.matchMedia("(prefers-reduced-motion: reduce)");
+const MOTION = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)") ||
+  { matches: false };
 
 function resetParticle(particle, index, width, height, initial = false) {
   particle.x = (index * 67 + 31) % width;
